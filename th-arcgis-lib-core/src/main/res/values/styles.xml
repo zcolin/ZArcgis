@@ -1,0 +1,13 @@
+<resources>
+
+    <style name="Callout_TextStyle_Primary_Small" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/calloutTextPrimaryColor</item>
+        <item name="android:textSize">13dp</item>
+    </style>
+
+
+    <style name="Callout_TextStyle_SubPrimary_Small" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/calloutTextSubPrimaryColor</item>
+        <item name="android:textSize">13dp</item>
+    </style>
+</resources>

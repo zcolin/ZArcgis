@@ -1,0 +1,78 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    defaultConfig {
+        applicationId "com.zcolin.arcgis_10030demo"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.rootVersionCode
+        versionName rootProject.ext.rootVersionName
+        multiDexEnabled true
+        ndk {
+            abiFilters "armeabi-v7a"  // 指定要ndk需要兼容的架构(这样其他依赖包里mips,x86,armeabi,arm-v8之类的so会被过滤掉)
+        }
+    }
+    signingConfigs {
+        def pFile = file(rootProject.ext.key_path)
+        def Properties p = new Properties()
+        p.load(new FileInputStream(pFile))
+
+        debug {
+            storeFile file(p['RELEASE_STORE_FILE'])
+            storePassword p['RELEASE_STORE_PASSWORD']
+            keyAlias p['RELEASE_KEY_ALIAS']
+            keyPassword p['RELEASE_KEY_PASSWORD']
+        }
+
+        release {
+            storeFile file(p['RELEASE_STORE_FILE'])
+            storePassword p['RELEASE_STORE_PASSWORD']
+            keyAlias p['RELEASE_KEY_ALIAS']
+            keyPassword p['RELEASE_KEY_PASSWORD']
+        }
+    }
+    buildTypes {
+        debug {
+            buildConfigField "boolean", "IS_RELEASE_URL", "false"
+
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.debug
+        }
+
+        release {
+            minifyEnabled true
+            shrinkResources true //移除无用的resource文件（如果使用getIdentifier函数的需要关闭）
+            zipAlignEnabled true  //Zipalign优化
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':th-arcgis-lib-core')
+    implementation "com.android.support:recyclerview-v7:$supprotVersion"
+    implementation "com.android.support:cardview-v7:$supprotVersion"
+    implementation "com.android.support:design:$supprotVersion"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.github.zcolin:ZFrame:2.0.6'
+    implementation 'com.github.zcolin:ZRecyclerView:2.1.5'
+    implementation 'com.github.zcolin:ZUILib:2.0.0'
+}

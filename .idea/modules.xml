@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ZArcgis.iml" filepath="$PROJECT_DIR$/ZArcgis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/th-arcgis-lib-core/th-arcgis-lib-core-100.3.iml" filepath="$PROJECT_DIR$/th-arcgis-lib-core/th-arcgis-lib-core-100.3.iml" />
+    </modules>
+  </component>
+</project>
