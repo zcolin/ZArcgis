@@ -1,18 +1,9 @@
 /*
  * *********************************************************
- *   author   zxt
+ *   author   colin
  *   company  telchina
- *   email    zhuxuetong123@163.com
- *   date     18-12-20 下午3:27
- * ********************************************************
- */
-
-/*
- * *********************************************************
- *   author   zhuxuetong
- *   company  telchina
- *   email    zhuxuetong123@163.com
- *   date     18-10-8 下午4:49
+ *   email    wanglin2046@126.com
+ *   date     19-1-23 下午2:48
  * ********************************************************
  */
 
@@ -22,7 +13,7 @@ import com.telchina.tharcgiscore.GisMapConfig;
 
 import java.util.Random;
 
-public class GaodeAndGoogleParam extends BaseTiledParam {
+public class GaodeAndGoogleTiledParam extends BaseTiledParam {
     private static final double[] SCALE = {295828763.795777, 147914381.897889, 73957190.948944, 36978595.474472, 18489297.737236, 9244648.868618, 4622324.434309, 2311162.217155, 1155581.108577, 
             577790.554289, 288895.277144, 144447.638572, 72223.819286, 36111.9096437, 18055.9548224, 9027.977411, 4513.988705, 2256.994353, 1128.497176};
     private static final double[] RES   = {78271.5169639999, 39135.7584820001, 19567.8792409999, 9783.93962049996, 4891.96981024998, 2445.98490512499, 1222.99245256249, 611.49622628138, 
@@ -33,7 +24,7 @@ public class GaodeAndGoogleParam extends BaseTiledParam {
     private static final double[] FULL_EXTENT = {-20037508.3427892, -20037508.3427892, 20037508.3427892, 20037508.3427892};
     private static final int      WKID        = 3857;
 
-    public GaodeAndGoogleParam(GisMapConfig gisMapConfig) {
+    public GaodeAndGoogleTiledParam(GisMapConfig gisMapConfig) {
         super(gisMapConfig);
     }
 
@@ -73,7 +64,7 @@ public class GaodeAndGoogleParam extends BaseTiledParam {
     }
 
     @Override
-    public String getUrl(int level, int col, int row, ZTiledType tiledType) {
+    public String getUrl(int level, int col, int row, ZBaseTiledType tiledType) {
         StringBuilder url = new StringBuilder();
         Random random = new Random();
         int subdomain = (random.nextInt(4));
@@ -100,6 +91,7 @@ public class GaodeAndGoogleParam extends BaseTiledParam {
                          .append("&s==Galil");
                 break;
             case CVA_C:
+                break;
             case CIA_C:
                 url = url.append("http://mt.google.cn/vt/imgtp=png32&lyrs=h@212000000&hl=zh-CN&gl=CN&src=app&x=").append(col).append("&y=").append(row).append("&z=").append(level).append("&s==Galil");
                 break;
@@ -112,15 +104,15 @@ public class GaodeAndGoogleParam extends BaseTiledParam {
     @Override
     public ZBaseTiledLayer[] getVecBaseTileLayer() {
         ZBaseTiledLayer baseLayer[] = new ZBaseTiledLayer[1];
-        baseLayer[0] = ZBaseTiledLayer.createLayer(this, ZTiledType.VEC_C);
+        baseLayer[0] = ZBaseTiledLayer.createLayer(this, ZBaseTiledType.VEC_C);
         return baseLayer;
     }
 
     @Override
     public ZBaseTiledLayer[] getImgBaseTileLayer() {
         ZBaseTiledLayer baseLayer[] = new ZBaseTiledLayer[2];
-        baseLayer[0] = ZBaseTiledLayer.createLayer(this, ZTiledType.IMG_C);
-        baseLayer[1] = ZBaseTiledLayer.createLayer(this, ZTiledType.CIA_C);
+        baseLayer[0] = ZBaseTiledLayer.createLayer(this, ZBaseTiledType.IMG_C);
+        baseLayer[1] = ZBaseTiledLayer.createLayer(this, ZBaseTiledType.CIA_C);
         return baseLayer;
     }
 }

@@ -1,20 +1,12 @@
 /*
  * *********************************************************
- *   author   zxt
+ *   author   colin
  *   company  telchina
- *   email    zhuxuetong123@163.com
- *   date     18-12-20 下午3:27
+ *   email    wanglin2046@126.com
+ *   date     19-1-23 下午2:48
  * ********************************************************
  */
 
-/*
- * *********************************************************
- *   author   zhuxuetong
- *   company  telchina
- *   email    zhuxuetong123@163.com
- *   date     18-10-8 下午4:49
- * ********************************************************
- */
 package com.telchina.tharcgiscore.tiledservice;
 
 import com.telchina.tharcgiscore.GisMapConfig;
@@ -76,7 +68,7 @@ public abstract class BaseTiledParam {
     /**
      * 获取图片加载地址
      */
-    public abstract String getUrl(int level, int col, int row, ZTiledType tiledType);
+    public abstract String getUrl(int level, int col, int row, ZBaseTiledType tiledType);
 
     /**
      * 获取矢量地图底图

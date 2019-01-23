@@ -1,20 +1,12 @@
 /*
  * *********************************************************
- *   author   zxt
+ *   author   colin
  *   company  telchina
- *   email    zhuxuetong123@163.com
- *   date     18-12-20 下午3:27
+ *   email    wanglin2046@126.com
+ *   date     19-1-23 下午2:47
  * ********************************************************
  */
 
-/*
- * *********************************************************
- *   author   zhuxuetong
- *   company  telchina
- *   email    zhuxuetong123@163.com
- *   date     18-10-8 下午4:49
- * ********************************************************
- */
 package com.telchina.tharcgiscore.layermgr;
 
 import com.esri.arcgisruntime.layers.Layer;

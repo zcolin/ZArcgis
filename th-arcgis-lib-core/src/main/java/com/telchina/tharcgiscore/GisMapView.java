@@ -38,6 +38,9 @@ import com.esri.arcgisruntime.util.ListenableList;
 import com.telchina.tharcgiscore.tiledservice.BaseTiledParam;
 import com.telchina.tharcgiscore.tiledservice.ZBaseTiledLayer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 封装Arcgis MapView
  */
@@ -49,11 +52,9 @@ public class GisMapView extends FrameLayout {
     public BaseTiledParam tileParam;//底图参数类
     public GisMapConfig   gisMapConfig;//地图相关配置类
 
-    private SingleTapListener singleTapListener;
-    private DoubleTapListener doubleTapListener;
-    private LongPressListener longPressListener;
-
-    private ViewpointChangedListener viewpointChangedListener; //地图放大缩小监听
+    private List<SingleTapListener> singleTapListener = new ArrayList<>();
+    private List<DoubleTapListener> doubleTapListener = new ArrayList<>();
+    private List<LongPressListener> longPressListener = new ArrayList<>();
 
     private int     curMapType;
     private MapView mapView;
@@ -75,8 +76,10 @@ public class GisMapView extends FrameLayout {
         mapView.setOnTouchListener(new DefaultMapViewOnTouchListener(getContext(), mapView) {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
-                if (singleTapListener != null) {
-                    singleTapListener.onSingleTap(e);
+                if (singleTapListener.size() > 0) {
+                    for (SingleTapListener tapListener : singleTapListener) {
+                        tapListener.onSingleTap(e);
+                    }
                     return true;
                 }
                 return false;
@@ -84,8 +87,10 @@ public class GisMapView extends FrameLayout {
 
             @Override
             public boolean onDoubleTapEvent(MotionEvent e) {
-                if (doubleTapListener != null) {
-                    doubleTapListener.onDoubleTap(e);
+                if (doubleTapListener.size() > 0) {
+                    for (DoubleTapListener tapListener : doubleTapListener) {
+                        tapListener.onDoubleTap(e);
+                    }
                     return true;
                 }
                 return false;
@@ -93,14 +98,13 @@ public class GisMapView extends FrameLayout {
 
             @Override
             public void onLongPress(MotionEvent e) {
-                if (longPressListener != null) {
-                    longPressListener.onLongPress(e);
+                if (longPressListener.size() > 0) {
+                    for (LongPressListener pressListener : longPressListener) {
+                        pressListener.onLongPress(e);
+                    }
                 }
             }
         });
-        if (viewpointChangedListener != null) {
-            setViewpointChangedListener(viewpointChangedListener);
-        }
         addView(mapView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
@@ -142,8 +146,8 @@ public class GisMapView extends FrameLayout {
     /**
      * 设置地图放大缩小监听
      */
-    public void setViewpointChangedListener(ViewpointChangedListener viewpointChangedListener) {
-        this.viewpointChangedListener = viewpointChangedListener;
+    public void addViewpointChangedListener(ViewpointChangedListener viewpointChangedListener) {
+        mapView.addViewpointChangedListener(viewpointChangedListener);
     }
 
     /**
@@ -214,7 +218,7 @@ public class GisMapView extends FrameLayout {
      * @param geometry 几何图形的Geometry对象
      */
     public void zoomToGeometry(Geometry geometry) {
-        Point mPoint = getRectCenterPoint(geometry);
+        Point mPoint = getCenterPoint(geometry);
         zoomToPoint(mPoint, mapView.getMapScale());
     }
 
@@ -225,7 +229,7 @@ public class GisMapView extends FrameLayout {
      * @param scale    缩放比，当scale==0.0D时，scale=当前缩放比
      */
     public void zoomToGeometry(Geometry geometry, double scale) {
-        Point mPoint = getRectCenterPoint(geometry);
+        Point mPoint = getCenterPoint(geometry);
         zoomToPoint(mPoint, scale);
     }
 
@@ -240,14 +244,14 @@ public class GisMapView extends FrameLayout {
     /**
      * 获取元素的中心坐标点
      */
-    public Point getRectCenterPoint(Feature feature) {
-        return getRectCenterPoint(feature.getGeometry());
+    public Point getCenterPoint(Feature feature) {
+        return getCenterPoint(feature.getGeometry());
     }
 
     /**
      * 获取元素的中心坐标点
      */
-    public Point getRectCenterPoint(Geometry geometry) {
+    public Point getCenterPoint(Geometry geometry) {
         return geometry.getExtent().getCenter();
     }
 
@@ -294,13 +298,6 @@ public class GisMapView extends FrameLayout {
     }
 
     /**
-     * 设置状态监听
-     */
-    public void setOnStatusChangedListener(LoadStatusChangedListener onStatusChangedListener) {
-        getMap().addLoadStatusChangedListener(onStatusChangedListener);
-    }
-
-    /**
      * 获取mapView对象
      */
     public MapView getMapView() {
@@ -331,8 +328,9 @@ public class GisMapView extends FrameLayout {
     /**
      * 获取中心点
      */
-    public double[] getCenterPoint() {
-        return tileParam.getCenterPoint();
+    public Point getMapCenterPoint() {
+        double[] point = tileParam.getCenterPoint();
+        return new Point(point[0], point[1], SpatialReference.create(tileParam.getWkid()));
     }
 
     public Callout getCallout() {
@@ -348,16 +346,68 @@ public class GisMapView extends FrameLayout {
         mapView.resume();
     }
 
-    public void setOnSingleTapListener(SingleTapListener singleTapListener) {
-        this.singleTapListener = singleTapListener;
+    /**
+     * 设置状态监听
+     */
+    public void addLoadStatusChangedListener(LoadStatusChangedListener onStatusChangedListener) {
+        getMap().addLoadStatusChangedListener(onStatusChangedListener);
     }
 
-    public void setOnDoubleTapListener(DoubleTapListener doubleTapListener) {
-        this.doubleTapListener = doubleTapListener;
+    /**
+     * 移除状态监听
+     */
+    public void removeLoadStatusChangedListener(LoadStatusChangedListener onStatusChangedListener) {
+        getMap().removeLoadStatusChangedListener(onStatusChangedListener);
     }
 
-    public void setOnLongPressListener(LongPressListener longPressListener) {
-        this.longPressListener = longPressListener;
+    /**
+     * 设置加载监听
+     */
+    public void addDoneLoadingListener(Runnable runnable) {
+        getMap().addDoneLoadingListener(runnable);
+    }
+
+    /**
+     * 移除加载监听
+     */
+    public void removeDoneLoadingListener(Runnable runnable) {
+        getMap().removeDoneLoadingListener(runnable);
+    }
+
+    public void addSingleTapListener(SingleTapListener singleTapListener) {
+        if (!this.singleTapListener.contains(singleTapListener)) {
+            this.singleTapListener.add(singleTapListener);
+        }
+    }
+
+    public void addDoubleTapListener(DoubleTapListener doubleTapListener) {
+        if (!this.doubleTapListener.contains(doubleTapListener)) {
+            this.doubleTapListener.add(doubleTapListener);
+        }
+    }
+
+    public void addLongPressListener(LongPressListener longPressListener) {
+        if (!this.longPressListener.contains(longPressListener)) {
+            this.longPressListener.add(longPressListener);
+        }
+    }
+
+    public void removeSingleTapListener(SingleTapListener singleTapListener) {
+        if (this.singleTapListener.contains(singleTapListener)) {
+            this.singleTapListener.remove(singleTapListener);
+        }
+    }
+
+    public void removeDoubleTapListener(DoubleTapListener doubleTapListener) {
+        if (this.doubleTapListener.contains(doubleTapListener)) {
+            this.doubleTapListener.remove(doubleTapListener);
+        }
+    }
+
+    public void removeLongPressListener(LongPressListener longPressListener) {
+        if (this.longPressListener.contains(longPressListener)) {
+            this.longPressListener.remove(longPressListener);
+        }
     }
 
     public double getMapScale() {

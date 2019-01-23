@@ -12,7 +12,7 @@ package com.telchina.tharcgiscore;
 import android.support.annotation.IntDef;
 
 import com.telchina.tharcgiscore.tiledservice.BaseTiledParam;
-import com.telchina.tharcgiscore.tiledservice.TiandituParam;
+import com.telchina.tharcgiscore.tiledservice.GaodeTiledParam;
 import com.zcolin.frame.app.BaseApp;
 
 import java.lang.annotation.Retention;
@@ -57,7 +57,7 @@ public class GisMapConfig {
 
 
     public GisMapConfig() {
-        tileParam = new TiandituParam(this);
+        tileParam = new GaodeTiledParam(this);
     }
 
     /**

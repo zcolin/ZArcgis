@@ -1,23 +1,16 @@
 /*
  * *********************************************************
- *   author   zxt
+ *   author   colin
  *   company  telchina
- *   email    zhuxuetong123@163.com
- *   date     18-12-20 下午3:27
+ *   email    wanglin2046@126.com
+ *   date     19-1-23 下午2:47
  * ********************************************************
  */
 
-/*
- * *********************************************************
- *   author   zhuxuetong
- *   company  telchina
- *   email    zhuxuetong123@163.com
- *   date     18-10-8 下午4:49
- * ********************************************************
- */
 package com.telchina.tharcgiscore.layermgr;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
@@ -37,23 +30,20 @@ import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.TextSymbol;
 import com.telchina.tharcgiscore.GisMapView;
 import com.telchina.tharcgiscore.R;
-import com.telchina.tharcgiscore.entity.GisMapBufferBean;
-import com.telchina.tharcgiscore.entity.GisMapDrawBean;
-import com.telchina.tharcgiscore.entity.GisMapHighlightBean;
 import com.zcolin.frame.util.BitmapUtil;
 
 import java.util.Map;
 
 /**
  * 自定义图层操作类
- * 主要有缓冲区图层、绘画图层、高亮图层、定位图层
+ * 主要有缓冲区图层、高亮图层、定位图层
+ * 默认提供四个个图层，如果有更多需要，自己使用addLayer添加即可
  */
 public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
-    /*默认提供以下三个图层，如果有更多需要，自己使用addLayer添加即可*/
-    private GraphicsOverlay     bufferLayer;      //缓冲区图层
-    private GraphicsOverlay     tempLayer;        //临时图层
-    private GraphicsOverlay     highLightLayer;   //高亮图层
     private GraphicsOverlay     locationLayer;    //定位图层
+    private GraphicsOverlay     highLightLayer;   //高亮图层
+    private GraphicsOverlay     drawLayer;        //绘画图层
+    private GraphicsOverlay     bufferLayer;      //缓冲区图层
     private PictureMarkerSymbol locationSymbol;
     private boolean isFirstLocation = true;//是否第一次定位，第一次需要延时设置中心点
 
@@ -66,24 +56,31 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
         return bufferLayer;
     }
 
-    public GraphicsOverlay getGTempLayer() {
-        return tempLayer;
-    }
-
     public GraphicsOverlay getHighLightLayer() {
         return highLightLayer;
     }
 
+    public GraphicsOverlay getLocationLayer() {
+        return locationLayer;
+    }
+
+    public GraphicsOverlay geDrawLayer() {
+        return drawLayer;
+    }
+
+    /**
+     * 重置新添加图层
+     */
     public void resetAllLayers() {
         removeAllGraphicsOverlay();
         if (bufferLayer == null) {
             bufferLayer = new GraphicsOverlay(GraphicsOverlay.RenderingMode.STATIC);
         }
         addGraphicsLayer("bufferLayer", bufferLayer);
-        if (tempLayer == null) {
-            tempLayer = new GraphicsOverlay(GraphicsOverlay.RenderingMode.STATIC);
+        if (drawLayer == null) {
+            drawLayer = new GraphicsOverlay(GraphicsOverlay.RenderingMode.STATIC);
         }
-        addGraphicsLayer("tempLayer", tempLayer);
+        addGraphicsLayer("drawLayer", drawLayer);
         if (highLightLayer == null) {
             highLightLayer = new GraphicsOverlay(GraphicsOverlay.RenderingMode.STATIC);
         }
@@ -92,6 +89,43 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
             locationLayer = new GraphicsOverlay(GraphicsOverlay.RenderingMode.DYNAMIC);
         }
         addGraphicsLayer("locationLayer", locationLayer);
+    }
+
+
+    /**
+     * 清理缓冲区图层
+     */
+    public void clearBufferLayer() {
+        if (bufferLayer != null) {
+            bufferLayer.getGraphics().clear();
+        }
+    }
+
+    /**
+     * 清除定位图层
+     */
+    public void clearDrawLayer() {
+        if (drawLayer != null) {
+            drawLayer.getGraphics().clear();
+        }
+    }
+
+    /**
+     * 清空高亮图层
+     */
+    public void clearHighlightLayer() {
+        if (highLightLayer != null) {
+            highLightLayer.getGraphics().clear();
+        }
+    }
+
+    /**
+     * 清除定位图层
+     */
+    public void clearLocationLayer() {
+        if (locationLayer != null) {
+            locationLayer.getGraphics().clear();
+        }
     }
 
     /**
@@ -111,145 +145,45 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
     }
 
     /**
-     * 清理缓冲区
+     * 根据key清空某个图层的元素
      */
-    public void clearBufferLayer() {
-        bufferLayer.getGraphics().clear();
-    }
-
-    /**
-     * 清空tempLayer图层的元素
-     */
-    public void clearTempLayer() {
-        tempLayer.getGraphics().clear();
-    }
-
-    /**
-     * 清空highLightLayer
-     */
-    public void clearHighlightLayer() {
-        highLightLayer.getGraphics().clear();
-    }
-
-
-    /**
-     * 绘画或渲染缓冲区
-     *
-     * @param geometry   点线面信息
-     * @param bufferBean 高亮点或线的颜色 默认传-1
-     * @param distance   缓冲距离
-     */
-    public Geometry bufferLayer(Geometry geometry, GisMapBufferBean bufferBean, double distance) {
-        Geometry projectedGeometry = GeometryEngine.project(geometry, getArcMap().getSpatialReference());
-        Polygon polygon = GeometryEngine.buffer(projectedGeometry, distance);
-        Geometry bufferGeometry = GeometryEngine.project(polygon, getArcMap().getSpatialReference());
-
-        bufferLayer(bufferGeometry, bufferBean);
-        return bufferGeometry;
-    }
-
-    /**
-     * 绘画或渲染缓冲区
-     *
-     * @param geometry   缓冲区区域信息
-     * @param bufferBean 高亮点或线的颜色
-     */
-    public void bufferLayer(Geometry geometry, GisMapBufferBean bufferBean) {
-        Graphic graphic = null;
-        if (geometry.getGeometryType() == GeometryType.POINT || geometry.getGeometryType() == GeometryType.MULTIPOINT) {
-            Point point = (Point) geometry;
-            if (bufferBean.pointPic == -1 && bufferBean.pointColor != -1) {
-                SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(bufferBean.pointType, bufferBean.pointColor == -1 ? GisMapHighlightBean.POINT_COLOR : bufferBean.pointColor, bufferBean
-                        .pointSize);
-                graphic = new Graphic(point, pointSymbol);
-            } else {
-                Drawable drawable = mapView.getResources().getDrawable(bufferBean.pointPic == -1 ? GisMapHighlightBean.POINT_PIC : bufferBean.pointPic);
-                drawable = BitmapUtil.zoomDrawable(drawable, bufferBean.pointPicWidth, bufferBean.pointPicHeight);
-                PictureMarkerSymbol pictureMarker = new PictureMarkerSymbol(new BitmapDrawable(BitmapUtil.drawableToBitmap(drawable)));
-                graphic = new Graphic(point, pictureMarker);
-            }
-        } else if (geometry.getGeometryType() == GeometryType.POLYLINE) {
-            SimpleLineSymbol lineSymbol = new SimpleLineSymbol(bufferBean.lineType, bufferBean.lineColor, bufferBean.lineWidth);
-            Polyline polyline = (Polyline) geometry;
-            graphic = new Graphic(polyline, lineSymbol);
-        } else if (geometry.getGeometryType() == GeometryType.POLYGON) {
-            Polygon polygon = (Polygon) geometry;
-            SimpleLineSymbol lineSymbol = new SimpleLineSymbol(bufferBean.polygonLineType, bufferBean.polygonLineColor, bufferBean.polygonLineWidth);
-            SimpleFillSymbol fillSymbol = new SimpleFillSymbol(bufferBean.polygonFillType, bufferBean.polygonFillColor, lineSymbol);
-            graphic = new Graphic(polygon, fillSymbol);
-        }
-        if (graphic != null) {
-            bufferLayer.getGraphics().add(graphic);
+    public void clear(String layerKey) {
+        GraphicsOverlay overlay = getGraphicsLayer(layerKey);
+        if (overlay != null) {
+            clear(overlay);
         }
     }
-
-    /**
-     * 绘画或渲染缓冲区 不需要清缓冲图层
-     *
-     * @param geometry   缓冲区区域信息
-     * @param bufferBean 高亮点或线的颜色
-     */
-    public void bufferLayerWithClear(Geometry geometry, GisMapBufferBean bufferBean) {
-        clearBufferLayer();
-        bufferLayer(geometry, bufferBean);
-    }
-
 
     /**
      * 高亮某个区域
      *
-     * @param geometry    区域地理信息
-     * @param hilightBean 设置的高亮属性
+     * @param geometry 区域地理信息
+     * @param config   设置的高亮属性
      */
-    public void highLight(Geometry geometry, GisMapHighlightBean hilightBean) {
-        Graphic graphic = null;
-        if (geometry.getGeometryType() == GeometryType.POINT || geometry.getGeometryType() == GeometryType.MULTIPOINT) {
-            Point point = (Point) geometry;
-            if (hilightBean.pointPic == -1) {
-                SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(hilightBean.pointType, hilightBean.pointColor == -1 ? GisMapHighlightBean.POINT_COLOR : hilightBean.pointColor, hilightBean
-                        .pointSize);
-                graphic = new Graphic(point, pointSymbol);
-            } else {
-                Drawable drawable = mapView.getResources().getDrawable(hilightBean.pointPic == -1 ? GisMapHighlightBean.POINT_PIC : hilightBean.pointPic);
-                drawable = BitmapUtil.zoomDrawable(drawable, hilightBean.pointPicWidth, hilightBean.pointPicHeight);
-                PictureMarkerSymbol pictureMarker = new PictureMarkerSymbol(new BitmapDrawable(BitmapUtil.drawableToBitmap(drawable)));
-                graphic = new Graphic(point, pictureMarker);
-            }
-        } else if (geometry.getGeometryType() == GeometryType.POLYLINE) {
-            SimpleLineSymbol lineSymbol = new SimpleLineSymbol(hilightBean.lineType, hilightBean.lineColor, hilightBean.lineWidth);
-            Polyline polyline = (Polyline) geometry;
-            graphic = new Graphic(polyline, lineSymbol);
-        } else if (geometry.getGeometryType() == GeometryType.POLYGON) {
-            Polygon polygon = (Polygon) geometry;
-            SimpleLineSymbol lineSymbol = new SimpleLineSymbol(hilightBean.polygonLineType, hilightBean.polygonLineColor, hilightBean.polygonLineWidth);
-            SimpleFillSymbol fillSymbol = new SimpleFillSymbol(hilightBean.polygonFillType, hilightBean.polygonFillColor, lineSymbol);
-            graphic = new Graphic(polygon, fillSymbol);
-        }
-        if (graphic != null) {
-            highLightLayer.getGraphics().add(graphic);
-        }
+    public void highLightGeometry(Geometry geometry, GraphicsOverlayConfig config) {
+        highLightGeometry(highLightLayer, geometry, config, false);
     }
-
 
     /**
      * 高亮某个区域
      *
-     * @param geometry      区域信息
-     * @param highlightBean 点、线、面的高亮属性
-     * @param isMoveToGeo   是否移动到geometry
+     * @param geometry 区域地理信息
+     * @param config   设置的高亮属性
      */
-    public void highLight(Geometry geometry, GisMapHighlightBean highlightBean, boolean isMoveToGeo) {
-        if (isMoveToGeo) {
+    public void highLightGeometry(GraphicsOverlay overlay, Geometry geometry, GraphicsOverlayConfig config, boolean isMoveToDest) {
+        if (isMoveToDest) {
             mapView.zoomToGeometry(geometry);
         }
-        highLight(geometry, highlightBean);
+
+        config = config == null ? GraphicsOverlayConfig.instanceHighlight() : config;
+        drawGeometry(overlay, geometry, null, config);
     }
 
     /**
-     * 增加定位成功位置图层
+     * 增加定位成功位置图层, 不进行缩放
      */
-    public boolean addLocationSymbol(double longitude, double latitude) {
-        return addLocationSymbol(longitude, latitude, mapView.getMapScale());
+    public boolean drawLocationSymbol(double longitude, double latitude) {
+        return drawLocationSymbol(longitude, latitude, mapView.getMapScale());
     }
 
     /**
@@ -259,8 +193,8 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
      * @param latitude  坐标系 纬度
      * @param scale     缩放级别
      */
-    public boolean addLocationSymbol(double longitude, double latitude, double scale) {
-        return addLocationSymbol(longitude, latitude, scale, null);
+    public boolean drawLocationSymbol(double longitude, double latitude, double scale) {
+        return drawLocationSymbol(longitude, latitude, scale, null);
     }
 
     /**
@@ -271,16 +205,27 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
      * @param scale        缩放级别
      * @param locationIcon 定位图标
      */
-    public boolean addLocationSymbol(double longitude, double latitude, double scale, Drawable locationIcon) {
+    public boolean drawLocationSymbol(double longitude, double latitude, double scale, Drawable locationIcon) {
         locationLayer.getGraphics().clear();
+        return drawLocationSymbolWithoutClear(longitude, latitude, scale, locationIcon);
+    }
 
-        if (locationSymbol == null) {
-            locationIcon = locationIcon == null ? mapView.getResources().getDrawable(R.drawable.ic_gismap_location) : locationIcon;
-            Bitmap map = BitmapUtil.drawableToBitmap(BitmapUtil.zoomDrawable(locationIcon, 100, 100));
-            locationSymbol = new PictureMarkerSymbol(new BitmapDrawable(map));
-        }
+    /**
+     * 增加定位成功位置图层,未进行坐标系转换，自行转换
+     *
+     * @param longitude    坐标系 经度
+     * @param latitude     坐标系 纬度
+     * @param scale        缩放级别
+     * @param locationIcon 定位图标
+     */
+    public boolean drawLocationSymbolWithoutClear(double longitude, double latitude, double scale, Drawable locationIcon) {
+        if (0 != longitude && 0 != latitude) {
+            if (locationSymbol == null) {
+                locationIcon = locationIcon == null ? mapView.getResources().getDrawable(R.drawable.ic_gismap_location) : locationIcon;
+                Bitmap map = BitmapUtil.drawableToBitmap(BitmapUtil.zoomDrawable(locationIcon, 100, 100));
+                locationSymbol = new PictureMarkerSymbol(new BitmapDrawable(map));
+            }
 
-        if (0.0 != longitude && 0.0 != latitude) {
             Point mapPoint = new Point(longitude, latitude, SpatialReference.create(mapView.getWkid()));
             Graphic graphicPoint = new Graphic(mapPoint, locationSymbol);
             locationLayer.getGraphics().add(graphicPoint);
@@ -295,42 +240,122 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
         return false;
     }
 
+
     /**
-     * 移除定位图标
+     * 绘画或渲染缓冲区 清处原缓冲图层
+     *
+     * @param geometry 缓冲区区域信息
+     * @param config   样式配置
      */
-    public void clearLocationLayer() {
-        locationLayer.getGraphics().clear();
+    public void bufferGeometryWithClear(Geometry geometry, GraphicsOverlayConfig config) {
+        clearBufferLayer();
+        bufferGeometry(geometry, config);
     }
 
     /**
-     * 绘画几何要素
+     * 绘画或渲染缓冲区 清处原缓冲图层
+     *
+     * @param geometry 缓冲区区域信息
+     * @param config   样式配置
+     * @param distance 缓冲范围
+     */
+    public void bufferGeometryWithClear(Geometry geometry, GraphicsOverlayConfig config, double distance) {
+        clearBufferLayer();
+        bufferGeometry(geometry, config, distance);
+    }
+
+
+    /**
+     * 绘画或渲染缓冲区
+     *
+     * @param geometry 点线面信息
+     * @param config   样式配置
+     * @param distance 缓冲距离
+     */
+    public Geometry bufferGeometry(Geometry geometry, GraphicsOverlayConfig config, double distance) {
+        if (distance > 0) {
+            Geometry projectedGeometry = GeometryEngine.project(geometry, getArcMap().getSpatialReference());
+            Polygon polygon = GeometryEngine.buffer(projectedGeometry, distance);
+            geometry = GeometryEngine.project(polygon, getArcMap().getSpatialReference());
+        }
+
+        bufferGeometry(geometry, config);
+        return geometry;
+    }
+
+    /**
+     * 绘画或渲染缓冲区
+     *
+     * @param geometry 缓冲区区域信息
+     * @param config   样式配置
+     */
+    public void bufferGeometry(Geometry geometry, GraphicsOverlayConfig config) {
+        bufferGeometry(bufferLayer, geometry, config);
+    }
+
+    /**
+     * 绘画或渲染缓冲区
+     *
+     * @param geometry 缓冲区区域信息
+     * @param config   样式配置
+     */
+    public void bufferGeometry(GraphicsOverlay overlay, Geometry geometry, GraphicsOverlayConfig config) {
+        config = config == null ? GraphicsOverlayConfig.instanceBuffer() : config;
+        drawGeometry(overlay, geometry, null, config);
+    }
+
+    /**
+     * 绘制几何要素
      *
      * @param geometry 区域地理信息
-     * @param drawBean 设置的绘画属性
+     * @param config   绘画样式配置
      */
-    public void addSymbol(Geometry geometry, Map<String, Object> attr, GisMapDrawBean drawBean) {
+    public void drawGeometry(Geometry geometry, GraphicsOverlayConfig config) {
+        drawGeometry(geometry, null, config);
+    }
+
+    /**
+     * 绘制几何要素
+     *
+     * @param geometry 区域地理信息
+     * @param attr     属性信息
+     * @param config   绘画样式配置
+     */
+    public void drawGeometry(Geometry geometry, Map<String, Object> attr, GraphicsOverlayConfig config) {
+        drawGeometry(drawLayer, geometry, null, config);
+    }
+
+    /**
+     * 绘制几何要素
+     *
+     * @param geometry 区域地理信息
+     * @param attr     属性信息
+     * @param config   绘画样式配置
+     */
+    public void drawGeometry(GraphicsOverlay overlay, Geometry geometry, Map<String, Object> attr, GraphicsOverlayConfig config) {
+        config = config == null ? GraphicsOverlayConfig.instanceDraw() : config;
         Graphic graphic = null;
         if (geometry.getGeometryType() == GeometryType.POINT || geometry.getGeometryType() == GeometryType.MULTIPOINT) {
             Point point = (Point) geometry;
-            if (drawBean.pointPic == -1 && drawBean.pointColor != -1) {
-                SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(drawBean.pointType, drawBean.pointColor == -1 ? GisMapDrawBean.POINT_COLOR : drawBean.pointColor, drawBean.pointSize);
-                if (attr == null) {
-                    graphic = new Graphic(point, pointSymbol);
-                } else {
-                    graphic = new Graphic(point, attr, pointSymbol);
-                }
-            } else {
-                Drawable drawable = mapView.getResources().getDrawable(drawBean.pointPic == -1 ? GisMapHighlightBean.POINT_PIC : drawBean.pointPic);
-                drawable = BitmapUtil.zoomDrawable(drawable, drawBean.pointPicWidth, drawBean.pointPicHeight);
+            if (config.getPointPic() != 0 && config.getPointPic() != -1) {
+                Drawable drawable = mapView.getResources().getDrawable(config.getPointPic());
+                drawable = BitmapUtil.zoomDrawable(drawable, config.getPointPicWidth(), config.getPointPicHeight());
                 PictureMarkerSymbol pictureMarker = new PictureMarkerSymbol(new BitmapDrawable(BitmapUtil.drawableToBitmap(drawable)));
                 if (attr == null) {
                     graphic = new Graphic(point, pictureMarker);
                 } else {
                     graphic = new Graphic(point, attr, pictureMarker);
                 }
+            } else {
+                SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(config.getPointType(), config.getPointColor(), config.getPointSize());
+                if (attr == null) {
+                    graphic = new Graphic(point, pointSymbol);
+                } else {
+                    graphic = new Graphic(point, attr, pointSymbol);
+                }
             }
         } else if (geometry.getGeometryType() == GeometryType.POLYLINE) {
-            SimpleLineSymbol lineSymbol = new SimpleLineSymbol(drawBean.lineType, drawBean.lineColor, drawBean.lineWidth);
+            SimpleLineSymbol lineSymbol = new SimpleLineSymbol(config.getLineType(), config.getLineColor(), config.getLineWidth());
             Polyline polyline = (Polyline) geometry;
             if (attr == null) {
                 graphic = new Graphic(polyline, lineSymbol);
@@ -339,43 +364,65 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
             }
         } else if (geometry.getGeometryType() == GeometryType.POLYGON) {
             Polygon polygon = (Polygon) geometry;
-            SimpleLineSymbol lineSymbol = new SimpleLineSymbol(drawBean.polygonLineType, drawBean.polygonLineColor, drawBean.polygonLineWidth);
-            SimpleFillSymbol fillSymbol = new SimpleFillSymbol(drawBean.polygonFillType, drawBean.polygonFillColor, lineSymbol);
+            SimpleLineSymbol lineSymbol = new SimpleLineSymbol(config.getPolygonLineType(), config.getPolygonLineColor(), config.getPolygonLineWidth());
+            SimpleFillSymbol fillSymbol = new SimpleFillSymbol(config.getPolygonFillType(), config.getPolygonFillColor(), lineSymbol);
             if (attr == null) {
                 graphic = new Graphic(polygon, fillSymbol);
             } else {
                 graphic = new Graphic(polygon, attr, fillSymbol);
             }
         }
+
         if (graphic != null) {
-            tempLayer.getGraphics().add(graphic);
+            overlay.getGraphics().add(graphic);
         }
     }
 
     /**
-     * 写文字
+     * 绘制文字
      */
-    public boolean addTextSymbol(Point point, String string, int color, int textSize) {
-        TextSymbol ts = new TextSymbol(textSize, string, color, TextSymbol.HorizontalAlignment.CENTER, TextSymbol.VerticalAlignment.MIDDLE);
-        Graphic gText = new Graphic(point, ts);
-        return tempLayer.getGraphics().add(gText);
+    public boolean drawText(Point point, String str) {
+        return drawText(point, str, Color.RED, 28);
     }
 
     /**
-     * 增加图片
+     * 绘制文字
      */
-    public boolean addPictureMarkerSymbol(Point point, Drawable drawable) {
+    public boolean drawText(Point point, String str, int color, int textSize) {
+        return drawText(drawLayer, point, str, color, textSize);
+    }
+
+    /**
+     * 绘制文字
+     */
+    public boolean drawText(GraphicsOverlay graphicsOverlay, Point point, String str, int color, int textSize) {
+        TextSymbol ts = new TextSymbol(textSize, str, color, TextSymbol.HorizontalAlignment.CENTER, TextSymbol.VerticalAlignment.MIDDLE);
+        Graphic gText = new Graphic(point, ts);
+        return graphicsOverlay.getGraphics().add(gText);
+    }
+
+    /**
+     * 绘制图片
+     */
+    public boolean drawPictureMarker(Point point, Drawable drawable) {
         PictureMarkerSymbol markerSymbol = new PictureMarkerSymbol(new BitmapDrawable(BitmapUtil.drawableToBitmap(drawable)));
         Graphic graphic = new Graphic(point, markerSymbol);
-        return tempLayer.getGraphics().add(graphic);
+        return drawLayer.getGraphics().add(graphic);
     }
 
     /**
-     * 增加图片
+     * 绘制图片
      */
-    public boolean addPictureMarkerSymbol(Point point, String url) {
+    public boolean drawPictureMarker(Point point, String url) {
+        return drawPictureMarker(drawLayer, point, url);
+    }
+
+    /**
+     * 绘制图片
+     */
+    public boolean drawPictureMarker(GraphicsOverlay graphicsOverlay, Point point, String url) {
         PictureMarkerSymbol markerSymbol = new PictureMarkerSymbol(url);
         Graphic graphic = new Graphic(point, markerSymbol);
-        return tempLayer.getGraphics().add(graphic);
+        return graphicsOverlay.getGraphics().add(graphic);
     }
 }

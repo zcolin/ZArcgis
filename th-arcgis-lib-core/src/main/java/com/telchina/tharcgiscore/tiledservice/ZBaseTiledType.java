@@ -1,23 +1,15 @@
 /*
  * *********************************************************
- *   author   zxt
+ *   author   colin
  *   company  telchina
- *   email    zhuxuetong123@163.com
- *   date     18-12-20 下午3:27
+ *   email    wanglin2046@126.com
+ *   date     19-1-23 下午2:48
  * ********************************************************
  */
 
-/*
- * *********************************************************
- *   author   zhuxuetong
- *   company  telchina
- *   email    zhuxuetong123@163.com
- *   date     18-10-8 下午4:49
- * ********************************************************
- */
 package com.telchina.tharcgiscore.tiledservice;
 
-public enum ZTiledType {
+public enum ZBaseTiledType {
     /**
      * 矢量
      */
@@ -26,7 +18,7 @@ public enum ZTiledType {
      * 影像
      */
     IMG_C,
-    
+
     /**
      * 矢量标注
      */

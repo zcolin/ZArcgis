@@ -1,18 +1,9 @@
 /*
  * *********************************************************
- *   author   zxt
+ *   author   colin
  *   company  telchina
- *   email    zhuxuetong123@163.com
- *   date     18-12-20 下午3:27
- * ********************************************************
- */
-
-/*
- * *********************************************************
- *   author   zhuxuetong
- *   company  telchina
- *   email    zhuxuetong123@163.com
- *   date     18-10-8 下午4:49
+ *   email    wanglin2046@126.com
+ *   date     19-1-23 下午2:48
  * ********************************************************
  */
 
@@ -22,7 +13,7 @@ import com.telchina.tharcgiscore.GisMapConfig;
 
 import java.util.Random;
 
-public class TiandituParam extends BaseTiledParam {
+public class TiandituTiledParam extends BaseTiledParam {
     private static final double[] RES   = {0.703125, 0.3515625, 0.17578125, 0.087890625, 0.0439453125, 0.02197265625, 0.010986328125, 0.0054931640625, 0.00274658203125, 0.001373291015625, 
             0.0006866455078125, 0.00034332275390625, 0.000171661376953125, 8.58306884765629E-05, 4.29153442382814E-05, 2.14576721191407E-05, 1.07288360595703E-05, 5.36441802978516E-06};
     private static final double[] SCALE = {295829355.4545656E8, 147748799.285417, 73874399.6427087, 36937199.8213544, 18468599.9106772, 9234299.95533859, 4617149.97766929, 2308574.98883465, 
@@ -32,7 +23,7 @@ public class TiandituParam extends BaseTiledParam {
     private static final double[] FULL_EXTENT = {-180, -90, 180, 90};
     private static final int      WKID        = 4326;
 
-    public TiandituParam(GisMapConfig gisMapConfig) {
+    public TiandituTiledParam(GisMapConfig gisMapConfig) {
         super(gisMapConfig);
     }
 
@@ -72,7 +63,7 @@ public class TiandituParam extends BaseTiledParam {
     }
 
     @Override
-    public String getUrl(int level, int col, int row, ZTiledType tiledType) {
+    public String getUrl(int level, int col, int row, ZBaseTiledType tiledType) {
         StringBuilder url = new StringBuilder("http://t");
         Random random = new Random();
         int subdomain = (random.nextInt(6) + 1);
@@ -99,16 +90,16 @@ public class TiandituParam extends BaseTiledParam {
     @Override
     public ZBaseTiledLayer[] getVecBaseTileLayer() {
         ZBaseTiledLayer baseLayer[] = new ZBaseTiledLayer[2];
-        baseLayer[0] = ZBaseTiledLayer.createLayer(this, ZTiledType.VEC_C);
-        baseLayer[1] = ZBaseTiledLayer.createLayer(this, ZTiledType.CVA_C);
+        baseLayer[0] = ZBaseTiledLayer.createLayer(this, ZBaseTiledType.VEC_C);
+        baseLayer[1] = ZBaseTiledLayer.createLayer(this, ZBaseTiledType.CVA_C);
         return baseLayer;
     }
 
     @Override
     public ZBaseTiledLayer[] getImgBaseTileLayer() {
         ZBaseTiledLayer baseLayer[] = new ZBaseTiledLayer[2];
-        baseLayer[0] = ZBaseTiledLayer.createLayer(this, ZTiledType.IMG_C);
-        baseLayer[1] = ZBaseTiledLayer.createLayer(this, ZTiledType.CIA_C);
+        baseLayer[0] = ZBaseTiledLayer.createLayer(this, ZBaseTiledType.IMG_C);
+        baseLayer[1] = ZBaseTiledLayer.createLayer(this, ZBaseTiledType.CIA_C);
         return baseLayer;
     }
 }

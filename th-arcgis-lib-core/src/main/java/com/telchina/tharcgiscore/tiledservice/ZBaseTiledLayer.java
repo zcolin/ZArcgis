@@ -1,20 +1,12 @@
 /*
  * *********************************************************
- *   author   zxt
+ *   author   colin
  *   company  telchina
- *   email    zhuxuetong123@163.com
- *   date     18-12-20 下午3:27
+ *   email    wanglin2046@126.com
+ *   date     19-1-23 下午2:48
  * ********************************************************
  */
 
-/*
- * *********************************************************
- *   author   zhuxuetong
- *   company  telchina
- *   email    zhuxuetong123@163.com
- *   date     18-10-8 下午4:49
- * ********************************************************
- */
 package com.telchina.tharcgiscore.tiledservice;
 
 import com.esri.arcgisruntime.arcgisservices.LevelOfDetail;
@@ -43,10 +35,10 @@ import java.util.List;
  * 天地图图层服务类
  */
 public class ZBaseTiledLayer extends ImageTiledLayer {
-    private ZTiledType     tiledType;
+    private ZBaseTiledType tiledType;
     private BaseTiledParam tileParam;
 
-    public static ZBaseTiledLayer createLayer(BaseTiledParam tileParam, ZTiledType tiledType) {
+    public static ZBaseTiledLayer createLayer(BaseTiledParam tileParam, ZBaseTiledType tiledType) {
         List<LevelOfDetail> levelOfDetails = new ArrayList<>();
         for (int i = 0; i < tileParam.getScale().length; i++) {
             LevelOfDetail detail = new LevelOfDetail(i + 1, tileParam.getRes()[i], tileParam.getScale()[i]);
@@ -60,7 +52,7 @@ public class ZBaseTiledLayer extends ImageTiledLayer {
         return new ZBaseTiledLayer(tileParam, tiledType, tileInfo, fullExtent);
     }
 
-    public ZBaseTiledLayer(BaseTiledParam tileParam, ZTiledType tiledType, TileInfo tileInfo, Envelope fullExtent) {
+    public ZBaseTiledLayer(BaseTiledParam tileParam, ZBaseTiledType tiledType, TileInfo tileInfo, Envelope fullExtent) {
         super(tileInfo, fullExtent);
         this.tileParam = tileParam;
         this.tiledType = tiledType;
@@ -127,7 +119,7 @@ public class ZBaseTiledLayer extends ImageTiledLayer {
         return this.tileParam;
     }
 
-    public ZTiledType getTiledType() {
+    public ZBaseTiledType getTiledType() {
         return this.tiledType;
     }
 
@@ -138,7 +130,7 @@ public class ZBaseTiledLayer extends ImageTiledLayer {
     /**
      * 将图片保存到本地 目录结构可以随便定义 只要你找得到对应的图片
      */
-    private void addOfflineCacheFile(int level, int col, int row, ZTiledType mapType, byte[] bytes) {
+    private void addOfflineCacheFile(int level, int col, int row, ZBaseTiledType mapType, byte[] bytes) {
         File rowfile = new File(getCachePath() + level + File.separator + col + File.separator + row + File.separator + mapType + ".dat");
         FileUtil.checkFilePath(rowfile, false);
         if (!rowfile.exists()) {
@@ -166,7 +158,7 @@ public class ZBaseTiledLayer extends ImageTiledLayer {
     /**
      * 从本地获取图片
      */
-    private byte[] getOfflineCacheFile(int level, int col, int row, ZTiledType maptype) {
+    private byte[] getOfflineCacheFile(int level, int col, int row, ZBaseTiledType maptype) {
         File rowfile = new File(getCachePath() + level + File.separator + col + File.separator + row + File.separator + maptype + ".dat");
         if (rowfile.exists()) {
             FileInputStream in = null;

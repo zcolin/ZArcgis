@@ -1,8 +1,10 @@
 package com.zcolin.arcgis_10030demo;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import com.telchina.tharcgiscore.GisMapOperateView;
+import com.telchina.tharcgiscore.callout.CalloutMgr;
 import com.zcolin.frame.app.BaseFrameActivity;
 
 /**
@@ -19,9 +21,14 @@ public class MainActivity extends BaseFrameActivity {
         gisMapOperateView = findViewById(R.id.gismap_view);
         initData();
     }
-    
-    
-    private void initData(){
+
+
+    private void initData() {
         gisMapOperateView.initMapViews();
+        CalloutMgr.instance(gisMapOperateView.getCallout(), mActivity, "我是一个callout")
+                  .backgroundColor(Color.GREEN)
+                  .borderColor(Color.RED)
+                  .outSideTouchDismiss(gisMapOperateView.getGisMapView())
+                  .show(gisMapOperateView.getMapCenterPoint());
     }
 }

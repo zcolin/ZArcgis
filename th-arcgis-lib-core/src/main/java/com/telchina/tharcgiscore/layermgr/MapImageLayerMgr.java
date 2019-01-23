@@ -1,20 +1,12 @@
 /*
  * *********************************************************
- *   author   zxt
+ *   author   colin
  *   company  telchina
- *   email    zhuxuetong123@163.com
- *   date     18-12-20 下午3:27
+ *   email    wanglin2046@126.com
+ *   date     19-1-23 下午2:48
  * ********************************************************
  */
 
-/*
- * *********************************************************
- *   author   zhuxuetong
- *   company  telchina
- *   email    zhuxuetong123@163.com
- *   date     18-10-8 下午4:49
- * ********************************************************
- */
 package com.telchina.tharcgiscore.layermgr;
 
 import android.content.Context;
@@ -200,38 +192,38 @@ public class MapImageLayerMgr extends AbstractOperationalLayerMgr {
      */
     public void setLegendControl(Map<String, String> condition, List<String> layerUrls) {
         /*当condition不为空时，按condition种的图例数据控制几何要素的显示*/
-//        if (condition != null && condition.size() > 0) {
-//            for (Object obj : condition.entrySet()) {
-//                Map<Integer, String> layerDefs = new HashMap<>();
-//                        /*根据图层url获取到已经添加的图层服务*/
-//                ArcGISMapImageLayer layer = getDynamicLayer((String) ((Map.Entry) obj).getKey());
-//                if (layer != null && layer.getSublayers() != null) {
-//                            /*将查询条件，按子图层的id，插入到每一个图层*/
-//                    for (int i = 0; i < layer.getSublayers().size(); i++) {
-//                        layerDefs.put(i, (String) ((Map.Entry) obj).getValue());
-//                    }
-//                    layer.setLayerDefinitions(layerDefs);
-//                    layer.refresh();
-//                }
-//            }
-//        } else {/*condition为空时，就要显示condition中的所有几何要素*/
-//            if (layerUrls != null && layerUrls.size() > 0) {
-//                for (String layerUrl : layerUrls) {
-//                    Map<Integer, String> layerDefs = new HashMap<>();
-//                    ArcGISMapImageLayer layer = getDynamicLayer(layerUrl);
-//                    if (layer != null) {
-//                        SublayerList childLayers = layer.getSublayers();
-//                        if (childLayers != null && childLayers.size() > 0) {
-//                            for (int i = 0; i < childLayers.size(); i++) {
-//                                layerDefs.put(i, "1=1");
-//                            }
-//                            layer.setLayerDefinitions(layerDefs);
-//                        }
-//                        layer.setVisible(true);
-//                    }
-//                }
-//            }
-//        }
+        //        if (condition != null && condition.size() > 0) {
+        //            for (Object obj : condition.entrySet()) {
+        //                Map<Integer, String> layerDefs = new HashMap<>();
+        //                        /*根据图层url获取到已经添加的图层服务*/
+        //                ArcGISMapImageLayer layer = getDynamicLayer((String) ((Map.Entry) obj).getKey());
+        //                if (layer != null && layer.getSublayers() != null) {
+        //                            /*将查询条件，按子图层的id，插入到每一个图层*/
+        //                    for (int i = 0; i < layer.getSublayers().size(); i++) {
+        //                        layerDefs.put(i, (String) ((Map.Entry) obj).getValue());
+        //                    }
+        //                    layer.setLayerDefinitions(layerDefs);
+        //                    layer.refresh();
+        //                }
+        //            }
+        //        } else {/*condition为空时，就要显示condition中的所有几何要素*/
+        //            if (layerUrls != null && layerUrls.size() > 0) {
+        //                for (String layerUrl : layerUrls) {
+        //                    Map<Integer, String> layerDefs = new HashMap<>();
+        //                    ArcGISMapImageLayer layer = getDynamicLayer(layerUrl);
+        //                    if (layer != null) {
+        //                        SublayerList childLayers = layer.getSublayers();
+        //                        if (childLayers != null && childLayers.size() > 0) {
+        //                            for (int i = 0; i < childLayers.size(); i++) {
+        //                                layerDefs.put(i, "1=1");
+        //                            }
+        //                            layer.setLayerDefinitions(layerDefs);
+        //                        }
+        //                        layer.setVisible(true);
+        //                    }
+        //                }
+        //            }
+        //        }
     }
 
     /**

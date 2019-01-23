@@ -1,29 +1,12 @@
 /*
  * *********************************************************
- *   author   zxt
+ *   author   colin
  *   company  telchina
- *   email    zhuxuetong123@163.com
- *   date     18-12-20 下午3:27
+ *   email    wanglin2046@126.com
+ *   date     19-1-23 上午10:25
  * ********************************************************
  */
 
-/*
- * *********************************************************
- *   author   zhuxuetong
- *   company  telchina
- *   email    zhuxuetong123@163.com
- *   date     18-10-31 下午7:54
- * ********************************************************
- */
-
-/*
- * *********************************************************
- *   author   zhuxuetong
- *   company  telchina
- *   email    zhuxuetong123@163.com
- *   date     18-6-19 下午2:14
- * ********************************************************
- */
 package com.telchina.tharcgiscore.util;
 
 import android.annotation.SuppressLint;
@@ -42,7 +25,8 @@ import java.util.List;
 /**
  * WKT转json字符串
  */
-public class Wkt2JsonUtil {
+public class WktConvertUtil {
+
     public static String wkt2Json(String wkt, int wkid) {
         if (wkt == null || wkt.length() == 0) {
             return wkt;
@@ -63,7 +47,6 @@ public class Wkt2JsonUtil {
         }
         return wkt;
     }
-
 
     /**
      * 点 转换 JSON
@@ -218,29 +201,7 @@ public class Wkt2JsonUtil {
         return null;
     }
 
-    /**
-     * 线 转换 JSON
-     */
-    public static List<List<Double[]>> getLinestringWktToList(String wkt) {
-        List<List<Double[]>> lists = new ArrayList<>();
-        List<Double[]> list = new ArrayList<>();
-        String[] strHead = wkt.split("\\(");
-        String strContent = strHead[1].substring(0, strHead[1].length() - 1);
-        String[] strResult = strContent.split(",");
-        for (String aStrResult : strResult) {
-            String itme = aStrResult.trim();
-            String[] items = itme.split(" ");
-            Double[] listResult = new Double[]{Double.parseDouble(items[0]), Double.parseDouble(items[1])};
-            list.add(listResult);
-        }
-        lists.add(list);
-        return lists;
-    }
-
-    /**
-     * 多线 转换 JSON
-     */
-    public static List<List<Double[]>> getMultilinestringWktToList(String wkt) {
+    private static List<List<Double[]>> getMultilinestringWktToList(String wkt) {
         List<List<Double[]>> lists = new ArrayList<>();
         String[] strList = wkt.substring(0, wkt.length() - 1).split("\\(", 2)[1].split("\\),\\(");
         for (String aStrList : strList) {
@@ -256,9 +217,23 @@ public class Wkt2JsonUtil {
         return lists;
     }
 
-    /**
-     * 多边形 转换 JSON
-     */
+    private static List<List<Double[]>> getLinestringWktToList(String wkt) {
+        List<List<Double[]>> lists = new ArrayList<>();
+        List<Double[]> list = new ArrayList<>();
+        String[] strHead = wkt.split("\\(");
+        String strContent = strHead[1].substring(0, strHead[1].length() - 1);
+        String[] strResult = strContent.split(",");
+        for (String aStrResult : strResult) {
+            String itme = aStrResult.trim();
+            String[] items = itme.split(" ");
+            Double[] listResult = new Double[]{Double.parseDouble(items[0]), Double.parseDouble(items[1])};
+            list.add(listResult);
+        }
+        lists.add(list);
+        return lists;
+    }
+
+
     private static List<List<Double[]>> getPolygonWktToList(String wkt) {
         List<List<Double[]>> lists = new ArrayList<>();
         String[] strList = wkt.substring(0, wkt.length() - 1).split("\\(", 2)[1].split("\\),\\(");
@@ -275,9 +250,6 @@ public class Wkt2JsonUtil {
         return lists;
     }
 
-    /**
-     * 多个多边形 转换 JSON
-     */
     private static List<List<Double[]>> getMultipolygonWktToList(String wkt) {
         List<List<Double[]>> lists = new ArrayList<>();
         String[] strList = wkt.substring(0, wkt.length() - 1).split("\\(", 2)[1].split("\\),\\(");
@@ -449,53 +421,26 @@ public class Wkt2JsonUtil {
     }
 
     /**
-     * 将返回的点线面数据 转换成json并生成相应的Geometry对象
+     * wkt字符串的点线面数据 转换成json并生成相应的Geometry对象
      */
     public static Geometry getGeometryFromWkt(String wktstr, int wkid) {
-        String strJson = Wkt2JsonUtil.wkt2Json(wktstr, wkid);
+        String strJson = wkt2Json(wktstr, wkid);
         return Geometry.fromJson(strJson);
     }
 
     /**
      * 获取缓冲区的
      */
-    public static Geometry getBufferGeometry(Geometry geometry, double distance, int wkid) {
+    public static Geometry getBufferGeometry(Geometry geometry, double distance) {
         return GeometryEngine.buffer(geometry, distance);
     }
 
     /**
      * 获取Geometry中心点坐标
-     * point是本身
-     * line取距离中心最近的点
-     * p
      */
     public static Point getCenterGeometry(String wkt, int wkid) {
-        return getCenterGeometry(getGeometryFromWkt(wkt, wkid));
-    }
-
-    /**
-     * 获取Geometry中心点坐标
-     * point是本身
-     * line取距离中心最近的点
-     * p
-     */
-    public static Point getCenterGeometry(Geometry geometry) {
-        Point currentPoint = null;
-        if (geometry != null) {
-            if (geometry.getGeometryType() == GeometryType.POLYLINE) {//移动到线的中点位置
-                String geometryWtk = Wkt2JsonUtil.geomToWKT(geometry);
-                List<List<Double[]>> line = Wkt2JsonUtil.getMultilinestringWktToList(geometryWtk);
-                if (line != null && line.size() > 0) {
-                    if (line.get(0) != null && line.get(0).size() > 0) {
-                        Double[] point = line.get(0).get(line.get(0).size() / 2);
-                        currentPoint = new Point(point[0], point[1], geometry.getSpatialReference());
-                    }
-                }
-            } else {//点和面，移动到中心
-                currentPoint = geometry.getExtent().getCenter();
-            }
-        }
-        return currentPoint;
+        Geometry geometry = getGeometryFromWkt(wkt, wkid);
+        return geometry == null ? null : geometry.getExtent().getCenter();
     }
 
     /**
@@ -539,5 +484,4 @@ public class Wkt2JsonUtil {
         public List<List<Double[]>>     rings;
         public HashMap<String, Integer> spatialReference;
     }
-
 }
