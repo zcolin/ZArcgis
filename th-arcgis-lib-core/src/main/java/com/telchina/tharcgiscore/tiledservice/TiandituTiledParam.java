@@ -63,7 +63,7 @@ public class TiandituTiledParam extends BaseTiledParam {
     }
 
     @Override
-    public String getUrl(int level, int col, int row, ZBaseTiledType tiledType) {
+    public String getUrl(int level, int col, int row, BaseTiledType tiledType) {
         StringBuilder url = new StringBuilder("http://t");
         Random random = new Random();
         int subdomain = (random.nextInt(6) + 1);
@@ -88,18 +88,18 @@ public class TiandituTiledParam extends BaseTiledParam {
     }
 
     @Override
-    public ZBaseTiledLayer[] getVecBaseTileLayer() {
-        ZBaseTiledLayer baseLayer[] = new ZBaseTiledLayer[2];
-        baseLayer[0] = ZBaseTiledLayer.createLayer(this, ZBaseTiledType.VEC_C);
-        baseLayer[1] = ZBaseTiledLayer.createLayer(this, ZBaseTiledType.CVA_C);
+    public BaseTiledLayer[] getVecBaseTileLayer() {
+        BaseTiledLayer baseLayer[] = new BaseTiledLayer[2];
+        baseLayer[0] = BaseTiledLayer.createLayer(this, BaseTiledType.VEC_C);
+        baseLayer[1] = BaseTiledLayer.createLayer(this, BaseTiledType.CVA_C);
         return baseLayer;
     }
 
     @Override
-    public ZBaseTiledLayer[] getImgBaseTileLayer() {
-        ZBaseTiledLayer baseLayer[] = new ZBaseTiledLayer[2];
-        baseLayer[0] = ZBaseTiledLayer.createLayer(this, ZBaseTiledType.IMG_C);
-        baseLayer[1] = ZBaseTiledLayer.createLayer(this, ZBaseTiledType.CIA_C);
+    public BaseTiledLayer[] getImgBaseTileLayer() {
+        BaseTiledLayer baseLayer[] = new BaseTiledLayer[2];
+        baseLayer[0] = BaseTiledLayer.createLayer(this, BaseTiledType.IMG_C);
+        baseLayer[1] = BaseTiledLayer.createLayer(this, BaseTiledType.CIA_C);
         return baseLayer;
     }
 }

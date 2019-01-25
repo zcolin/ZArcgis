@@ -221,7 +221,7 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
     public boolean drawLocationSymbolWithoutClear(double longitude, double latitude, double scale, Drawable locationIcon) {
         if (0 != longitude && 0 != latitude) {
             if (locationSymbol == null) {
-                locationIcon = locationIcon == null ? mapView.getResources().getDrawable(R.drawable.ic_gismap_location) : locationIcon;
+                locationIcon = locationIcon == null ? mapView.getResources().getDrawable(R.drawable.zarcgis_icon_point) : locationIcon;
                 Bitmap map = BitmapUtil.drawableToBitmap(BitmapUtil.zoomDrawable(locationIcon, 100, 100));
                 locationSymbol = new PictureMarkerSymbol(new BitmapDrawable(map));
             }
@@ -381,48 +381,61 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
     /**
      * 绘制文字
      */
-    public boolean drawText(Point point, String str) {
-        return drawText(point, str, Color.RED, 28);
+    public void drawText(Point point, String str) {
+        drawText(point, str, Color.RED, 18);
     }
 
     /**
      * 绘制文字
      */
-    public boolean drawText(Point point, String str, int color, int textSize) {
-        return drawText(drawLayer, point, str, color, textSize);
+    public void drawText(Point point, String str, int color, int textSize) {
+        drawText(drawLayer, point, str, color, textSize);
     }
 
     /**
      * 绘制文字
      */
-    public boolean drawText(GraphicsOverlay graphicsOverlay, Point point, String str, int color, int textSize) {
+    public void drawText(GraphicsOverlay graphicsOverlay, Point point, String str, int color, int textSize) {
         TextSymbol ts = new TextSymbol(textSize, str, color, TextSymbol.HorizontalAlignment.CENTER, TextSymbol.VerticalAlignment.MIDDLE);
         Graphic gText = new Graphic(point, ts);
-        return graphicsOverlay.getGraphics().add(gText);
+        graphicsOverlay.getGraphics().add(gText);
     }
 
     /**
      * 绘制图片
      */
-    public boolean drawPictureMarker(Point point, Drawable drawable) {
+    public void drawPictureMarker(Point point, Drawable drawable) {
+        drawPictureMarker(drawLayer, point, drawable);
+    }
+
+    /**
+     * 绘制图片
+     */
+    public void drawPictureMarker(GraphicsOverlay graphicsOverlay, Point point, Drawable drawable) {
         PictureMarkerSymbol markerSymbol = new PictureMarkerSymbol(new BitmapDrawable(BitmapUtil.drawableToBitmap(drawable)));
-        Graphic graphic = new Graphic(point, markerSymbol);
-        return drawLayer.getGraphics().add(graphic);
+        markerSymbol.addDoneLoadingListener(() -> {
+            Graphic graphic = new Graphic(point, markerSymbol);
+            graphicsOverlay.getGraphics().add(graphic);
+        });
+        markerSymbol.loadAsync();
     }
 
     /**
      * 绘制图片
      */
-    public boolean drawPictureMarker(Point point, String url) {
-        return drawPictureMarker(drawLayer, point, url);
+    public void drawPictureMarker(Point point, String url) {
+        drawPictureMarker(drawLayer, point, url);
     }
 
     /**
      * 绘制图片
      */
-    public boolean drawPictureMarker(GraphicsOverlay graphicsOverlay, Point point, String url) {
+    public void drawPictureMarker(GraphicsOverlay graphicsOverlay, Point point, String url) {
         PictureMarkerSymbol markerSymbol = new PictureMarkerSymbol(url);
-        Graphic graphic = new Graphic(point, markerSymbol);
-        return graphicsOverlay.getGraphics().add(graphic);
+        markerSymbol.addDoneLoadingListener(() -> {
+            Graphic graphic = new Graphic(point, markerSymbol);
+            graphicsOverlay.getGraphics().add(graphic);
+        });
+        markerSymbol.loadAsync();
     }
 }

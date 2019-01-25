@@ -9,7 +9,7 @@
 
 package com.telchina.tharcgiscore.tiledservice;
 
-public enum ZBaseTiledType {
+public enum BaseTiledType {
     /**
      * 矢量
      */

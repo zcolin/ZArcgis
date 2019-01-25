@@ -34,11 +34,11 @@ import java.util.List;
 /**
  * 天地图图层服务类
  */
-public class ZBaseTiledLayer extends ImageTiledLayer {
-    private ZBaseTiledType tiledType;
+public class BaseTiledLayer extends ImageTiledLayer {
+    private BaseTiledType  tiledType;
     private BaseTiledParam tileParam;
 
-    public static ZBaseTiledLayer createLayer(BaseTiledParam tileParam, ZBaseTiledType tiledType) {
+    public static BaseTiledLayer createLayer(BaseTiledParam tileParam, BaseTiledType tiledType) {
         List<LevelOfDetail> levelOfDetails = new ArrayList<>();
         for (int i = 0; i < tileParam.getScale().length; i++) {
             LevelOfDetail detail = new LevelOfDetail(i + 1, tileParam.getRes()[i], tileParam.getScale()[i]);
@@ -49,10 +49,10 @@ public class ZBaseTiledLayer extends ImageTiledLayer {
         TileInfo tileInfo = new TileInfo(96, TileInfo.ImageFormat.PNG, levelOfDetails, originalPoint, SpatialReference.create(tileParam.getWkid()), 256, 256);
         Envelope fullExtent = new Envelope(tileParam.getFullExtent()[0], tileParam.getFullExtent()[1], tileParam.getFullExtent()[2], tileParam.getFullExtent()[3], SpatialReference.create(tileParam
                 .getWkid()));
-        return new ZBaseTiledLayer(tileParam, tiledType, tileInfo, fullExtent);
+        return new BaseTiledLayer(tileParam, tiledType, tileInfo, fullExtent);
     }
 
-    public ZBaseTiledLayer(BaseTiledParam tileParam, ZBaseTiledType tiledType, TileInfo tileInfo, Envelope fullExtent) {
+    public BaseTiledLayer(BaseTiledParam tileParam, BaseTiledType tiledType, TileInfo tileInfo, Envelope fullExtent) {
         super(tileInfo, fullExtent);
         this.tileParam = tileParam;
         this.tiledType = tiledType;
@@ -119,7 +119,7 @@ public class ZBaseTiledLayer extends ImageTiledLayer {
         return this.tileParam;
     }
 
-    public ZBaseTiledType getTiledType() {
+    public BaseTiledType getTiledType() {
         return this.tiledType;
     }
 
@@ -130,7 +130,7 @@ public class ZBaseTiledLayer extends ImageTiledLayer {
     /**
      * 将图片保存到本地 目录结构可以随便定义 只要你找得到对应的图片
      */
-    private void addOfflineCacheFile(int level, int col, int row, ZBaseTiledType mapType, byte[] bytes) {
+    private void addOfflineCacheFile(int level, int col, int row, BaseTiledType mapType, byte[] bytes) {
         File rowfile = new File(getCachePath() + level + File.separator + col + File.separator + row + File.separator + mapType + ".dat");
         FileUtil.checkFilePath(rowfile, false);
         if (!rowfile.exists()) {
@@ -158,7 +158,7 @@ public class ZBaseTiledLayer extends ImageTiledLayer {
     /**
      * 从本地获取图片
      */
-    private byte[] getOfflineCacheFile(int level, int col, int row, ZBaseTiledType maptype) {
+    private byte[] getOfflineCacheFile(int level, int col, int row, BaseTiledType maptype) {
         File rowfile = new File(getCachePath() + level + File.separator + col + File.separator + row + File.separator + maptype + ".dat");
         if (rowfile.exists()) {
             FileInputStream in = null;

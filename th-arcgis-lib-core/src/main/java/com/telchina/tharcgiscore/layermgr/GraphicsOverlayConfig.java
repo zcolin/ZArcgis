@@ -24,7 +24,7 @@ public class GraphicsOverlayConfig {
     /**
      * 点图标的设置,图片的优先级高于纯色点
      */
-    private int pointPic       = R.drawable.ic_gismap_point_blue;//点图标
+    private int pointPic       = R.drawable.zarcgis_icon_point_blue;//点图标
     private int pointPicWidth  = 60;//点图表的宽度
     private int pointPicHeight = 60;//点图表的高度
 
@@ -58,7 +58,7 @@ public class GraphicsOverlayConfig {
     public static GraphicsOverlayConfig instanceHighlight() {
         GraphicsOverlayConfig overlayConfig = new GraphicsOverlayConfig();
         overlayConfig.pointColor = Color.RED;//点颜色
-        overlayConfig.pointPic = R.drawable.ic_gismap_point_red;//点图标
+        overlayConfig.pointPic = R.drawable.zarcgis_icon_point_red;//点图标
         overlayConfig.lineColor = Color.argb(255, 65, 105, 225);//线的颜色
         overlayConfig.lineWidth = 6;//线宽度
         overlayConfig.polygonLineColor = Color.argb(255, 65, 105, 225);//面的边线的颜色
@@ -69,7 +69,7 @@ public class GraphicsOverlayConfig {
     public static GraphicsOverlayConfig instanceDraw() {
         GraphicsOverlayConfig overlayConfig = new GraphicsOverlayConfig();
         overlayConfig.pointColor = Color.argb(90, 255, 0, 0);//点颜色
-        overlayConfig.pointPic = R.drawable.ic_gismap_point_blue;//点图标
+        overlayConfig.pointPic = R.drawable.zarcgis_icon_point_blue;//点图标
         overlayConfig.lineColor = Color.argb(90, 255, 0, 0);//线的颜色
         overlayConfig.lineWidth = 4;//线宽度
         overlayConfig.polygonLineColor = Color.RED;//面的边线的颜色

@@ -35,8 +35,8 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.ViewpointChangedListener;
 import com.esri.arcgisruntime.util.ListenableList;
+import com.telchina.tharcgiscore.tiledservice.BaseTiledLayer;
 import com.telchina.tharcgiscore.tiledservice.BaseTiledParam;
-import com.telchina.tharcgiscore.tiledservice.ZBaseTiledLayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +49,8 @@ public class GisMapView extends FrameLayout {
     public static final  int    TYPE_BASETILED_VEC = 0;//普通地图
     public static final  int    TYPE_BASETILED_IMG = 1;//影像地图
 
-    public BaseTiledParam tileParam;//底图参数类
-    public GisMapConfig   gisMapConfig;//地图相关配置类
+    private BaseTiledParam tileParam;//底图参数类
+    private GisMapConfig   gisMapConfig;//地图相关配置类
 
     private List<SingleTapListener> singleTapListener = new ArrayList<>();
     private List<DoubleTapListener> doubleTapListener = new ArrayList<>();
@@ -132,22 +132,19 @@ public class GisMapView extends FrameLayout {
      * 切换底图类型（普通/影像）
      */
     private void switchBaseTiled() {
-        ZBaseTiledLayer[] baseLayer = curMapType == TYPE_BASETILED_VEC ? tileParam.getVecBaseTileLayer() : tileParam.getImgBaseTileLayer();
+        BaseTiledLayer[] baseLayer = curMapType == TYPE_BASETILED_VEC ? tileParam.getVecBaseTileLayer() : tileParam.getImgBaseTileLayer();
         if (baseLayer != null && baseLayer.length > 0) {
             Basemap basemap = new Basemap();
-            for (ZBaseTiledLayer aBaseLayer : baseLayer) {
-                basemap.getBaseLayers().add(aBaseLayer);
+            for (BaseTiledLayer aBaseLayer : baseLayer) {
+                aBaseLayer.loadAsync();
+                aBaseLayer.addDoneLoadingListener(() -> basemap.getBaseLayers().add(aBaseLayer));
             }
             setBaseMap(basemap);
         }
     }
 
-
-    /**
-     * 设置地图放大缩小监听
-     */
-    public void addViewpointChangedListener(ViewpointChangedListener viewpointChangedListener) {
-        mapView.addViewpointChangedListener(viewpointChangedListener);
+    public GisMapConfig getGisMapConfig() {
+        return gisMapConfig;
     }
 
     /**
@@ -344,6 +341,20 @@ public class GisMapView extends FrameLayout {
 
     public void resume() {
         mapView.resume();
+    }
+
+    /**
+     * 设置地图放大缩小监听
+     */
+    public void addViewpointChangedListener(ViewpointChangedListener viewpointChangedListener) {
+        mapView.addViewpointChangedListener(viewpointChangedListener);
+    }
+
+    /**
+     * 移除设置地图放大缩小监听
+     */
+    public void removeViewpointChangedListener(ViewpointChangedListener viewpointChangedListener) {
+        mapView.removeViewpointChangedListener(viewpointChangedListener);
     }
 
     /**

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="zarcgis_style_dialog_transparent" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="zarcgis_style_dialog_lefttoright">
+        <item name="android:inAnimation">@anim/zarcgis_dialog_left_in</item>
+        <item name="android:outAnimation">@anim/zarcgis_dialog_left_out</item>
+    </style>
+
+    <style name="zarcgis_style_dialog_righttoleft">
+        <item name="android:inAnimation">@anim/zarcgis_dialog_left_out</item>
+        <item name="android:outAnimation">@anim/zarcgis_dialog_left_in</item>
+    </style>
+</resources>

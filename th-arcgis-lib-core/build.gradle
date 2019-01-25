@@ -23,7 +23,7 @@ android {
 
     packagingOptions {
         exclude 'META-INF/LGPL2.1'
-        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE' 
         exclude 'META-INF/NOTICE'
     }
     //解决multiDex找不到application的问题，在独立成依赖之后可以去掉

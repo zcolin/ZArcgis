@@ -68,15 +68,15 @@ public abstract class BaseTiledParam {
     /**
      * 获取图片加载地址
      */
-    public abstract String getUrl(int level, int col, int row, ZBaseTiledType tiledType);
+    public abstract String getUrl(int level, int col, int row, BaseTiledType tiledType);
 
     /**
      * 获取矢量地图底图
      */
-    public abstract ZBaseTiledLayer[] getVecBaseTileLayer();
+    public abstract BaseTiledLayer[] getVecBaseTileLayer();
 
     /**
      * 获取影像地图底图
      */
-    public abstract ZBaseTiledLayer[] getImgBaseTileLayer();
+    public abstract BaseTiledLayer[] getImgBaseTileLayer();
 }

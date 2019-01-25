@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="GisMapOperateView">
+        <attr name="clearIcon" format="reference"/>
+        <attr name="resetIcon" format="reference"/>
+        <attr name="locationIcon" format="reference"/>
+        <attr name="mapTypeIcon" format="reference"/>
+        <attr name="mapTypeItemBackground" format="reference"/>
+        <attr name="mapTypeItemTextColor" format="reference|color"/>
+        <attr name="mapTypeDialogAnim" format="reference"/>
+        <attr name="menuBarPaddingTop" format="dimension"/>
+        <attr name="menuBarPaddingBottom" format="dimension"/>
+        <attr name="menuBarPaddingLeft" format="dimension"/>
+        <attr name="menuBarPaddingRight" format="dimension"/>
+        <attr name="menuBarOrientation" format="enum">
+            <enum name="horizontal" value="0"/>
+            <enum name="vertical" value="1"/>
+        </attr>
+        <attr name="menuBarGravity" format="enum">
+            <enum name="left" value="3"/>
+            <enum name="top" value="48"/>
+            <enum name="right" value="5"/>
+            <enum name="bottom" value="80"/>
+            <enum name="left_top" value="51"/>
+            <enum name="right_top" value="53"/>
+            <enum name="left_bottom" value="83"/>
+            <enum name="right_bottom" value="85"/>
+        </attr>
+    </declare-styleable>
+</resources>

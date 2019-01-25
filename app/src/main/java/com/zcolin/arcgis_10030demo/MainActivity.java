@@ -30,5 +30,8 @@ public class MainActivity extends BaseFrameActivity {
                   .borderColor(Color.RED)
                   .outSideTouchDismiss(gisMapOperateView.getGisMapView())
                   .show(gisMapOperateView.getMapCenterPoint());
+
+        gisMapOperateView.drawText(gisMapOperateView.getMapCenterPoint(), "我是绘制的文字");
+        gisMapOperateView.drawPictureMarker(gisMapOperateView.getMapCenterPoint(), getResources().getDrawable(R.drawable.ic_launcher));
     }
 }

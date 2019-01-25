@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.telchina.tharcgiscore.GisMapOperateView
-    android:id="@+id/gismap_view"
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
-</com.telchina.tharcgiscore.GisMapOperateView>
+    <com.telchina.tharcgiscore.GisMapOperateView
+        android:id="@+id/gismap_view"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:menuBarGravity="right_top"
+        app:menuBarOrientation="vertical">
+
+    </com.telchina.tharcgiscore.GisMapOperateView>
+</LinearLayout>
