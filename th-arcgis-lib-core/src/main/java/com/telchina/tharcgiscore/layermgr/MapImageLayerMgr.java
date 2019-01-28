@@ -11,8 +11,6 @@ package com.telchina.tharcgiscore.layermgr;
 
 import android.content.Context;
 
-import com.esri.arcgisruntime.concurrent.ListenableFuture;
-import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.FeatureQueryResult;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
@@ -186,30 +184,27 @@ public class MapImageLayerMgr extends AbstractOperationalLayerMgr {
         return (ArcGISMapImageLayer) mapLayer.get("mapImageLayer");
     }
 
+
     /**
-     * 根据点坐标查询feature要素
+     * 获取元素信息,无过滤条件
      */
-    public Feature getFeatureByPoint(ArcGISMapImageSublayer featureLayer, Point point) {
-        FeatureQueryResult featureResult = getFeatureResultByGeometry(featureLayer, new Envelope(point, 10, 10));
-        for (Feature feature : featureResult) {
-            return feature;
-        }
-        return null;
+    public FeatureQueryResult getFeatureResult(ArcGISMapImageSublayer layer) {
+        return getFeatureResult(layer, null);
     }
 
     /**
-     * 根据位置信息查询获取特征图层元素信息
+     * 获取元素信息,自定义过滤条件
      */
-    public FeatureQueryResult getFeatureResultByGeometry(ArcGISMapImageSublayer layer, Geometry geometry) {
-        if (layer == null || geometry == null) {
+    public FeatureQueryResult getFeatureResult(ArcGISMapImageSublayer layer, QueryParameters queryParameters) {
+        if (layer == null) {
             return null;
         }
 
-        QueryParameters queryParameters = new QueryParameters();
-        queryParameters.setGeometry(geometry);
-        ServiceFeatureTable featureTableList = layer.getTable();
-        ListenableFuture<FeatureQueryResult> result = featureTableList.queryFeaturesAsync(queryParameters);
-
+        if (queryParameters == null) {
+            queryParameters = new QueryParameters();
+        }
+        ServiceFeatureTable featureTable = layer.getTable();
+        Future<FeatureQueryResult> result = featureTable.queryFeaturesAsync(queryParameters);
         try {
             return result.get();
         } catch (InterruptedException | ExecutionException e) {
@@ -219,36 +214,18 @@ public class MapImageLayerMgr extends AbstractOperationalLayerMgr {
     }
 
     /**
-     * 根据名字模糊查询获取特征图层元素信息
-     */
-    public FeatureQueryResult getFeatureResultLike(ArcGISMapImageSublayer layer, String key, String value) {
-        QueryParameters queryParameters = new QueryParameters();
-        queryParameters.setWhereClause(key + " like '%" + value + "%'");
-        ServiceFeatureTable featureTableList = layer.getTable();
-        Future<FeatureQueryResult> result = featureTableList.queryFeaturesAsync(queryParameters);
-
-        try {
-            return result.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * 根据条件搜索, 供给RightMenuFragment使用,多图层一起查询
+     * 异步查询，有进度条
      *
      * @param onSearchFinishListener 查询完成监听
      */
-    public void getFeatureResultLikeAsync(Context context, List<ArcGISMapImageSublayer> layers, String key, String value,
+    public void getFeatureResultAsync(Context context, List<ArcGISMapImageSublayer> layers, QueryParameters queryParameters,
             ZDialog.ZDialogParamSubmitListener<List<FeatureQueryResult>> onSearchFinishListener) {
         ZDialogAsyncProgress.instance(context).setDoInterface(new ZDialogAsyncProgress.DoInterface() {
             @Override
             public ZDialogAsyncProgress.ProcessInfo onDoInback() {
                 List<FeatureQueryResult> featureQueryResultList = new ArrayList<>();
                 for (ArcGISMapImageSublayer layer : layers) {
-                    FeatureQueryResult result = getFeatureResultLike(layer, key, value);
-                    featureQueryResultList.add(result);
+                    featureQueryResultList.add(getFeatureResult(layer, queryParameters));
                 }
                 ZDialogAsyncProgress.ProcessInfo processInfo = new ZDialogAsyncProgress.ProcessInfo();
                 processInfo.info = featureQueryResultList;
@@ -265,7 +242,49 @@ public class MapImageLayerMgr extends AbstractOperationalLayerMgr {
     }
 
     /**
-     * 根据UUID获取特征图层元素信息
+     * 异步关键字查询, 有进度条
+     *
+     * @param onSearchFinishListener 查询完成监听
+     */
+    public void getFeatureResultLikeAsync(Context context, List<ArcGISMapImageSublayer> layers, String key, String value,
+            ZDialog.ZDialogParamSubmitListener<List<FeatureQueryResult>> onSearchFinishListener) {
+        QueryParameters queryParameters = new QueryParameters();
+        queryParameters.setWhereClause(key + " like '%" + value + "%'");
+        getFeatureResultAsync(context, layers, queryParameters, onSearchFinishListener);
+    }
+
+
+    /**
+     * 根据点坐标查询feature要素
+     */
+    public FeatureQueryResult getFeatureByPoint(ArcGISMapImageSublayer featureLayer, Point point, int radio) {
+        return getFeatureResultByGeometry(featureLayer, new Envelope(point, radio, radio));
+    }
+
+    /**
+     * 根据位置信息查询获取特征图层元素信息
+     */
+    public FeatureQueryResult getFeatureResultByGeometry(ArcGISMapImageSublayer layer, Geometry geometry) {
+        if (layer == null || geometry == null) {
+            return null;
+        }
+
+        QueryParameters queryParameters = new QueryParameters();
+        queryParameters.setGeometry(geometry);
+        return getFeatureResult(layer, queryParameters);
+    }
+
+    /**
+     * 根据名字模糊查询获取特征图层元素信息
+     */
+    public FeatureQueryResult getFeatureResultLike(ArcGISMapImageSublayer layer, String key, String value) {
+        QueryParameters queryParameters = new QueryParameters();
+        queryParameters.setWhereClause(key + " like '%" + value + "%'");
+        return getFeatureResult(layer, queryParameters);
+    }
+
+    /**
+     * 根据具体值获取特征图层元素信息
      */
     public FeatureQueryResult getFeatureResultEquals(ArcGISMapImageSublayer layer, String key, String value) {
         QueryParameters queryParameters = new QueryParameters();
@@ -279,33 +298,5 @@ public class MapImageLayerMgr extends AbstractOperationalLayerMgr {
             e.printStackTrace();
         }
         return null;
-    }
-
-    /**
-     * 获取所有特征图层元素信息
-     */
-    public FeatureQueryResult getAllFeatureResult(ArcGISMapImageSublayer layer) {
-        if (layer == null) {
-            return null;
-        }
-
-        QueryParameters queryParameters = new QueryParameters();
-        ServiceFeatureTable featureTableList = layer.getTable();
-        Future<FeatureQueryResult> result = featureTableList.queryFeaturesAsync(queryParameters);
-
-        try {
-            return result.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
-    /**
-     * 图层加载完毕监听
-     */
-    public interface OnLoadFinishListener {
-        void onLoadFinish();
     }
 }
