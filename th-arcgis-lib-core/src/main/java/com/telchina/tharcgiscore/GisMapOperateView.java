@@ -29,8 +29,8 @@ import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.loadable.LoadStatusChangedListener;
 import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
-import com.telchina.tharcgiscore.layermgr.GraphicsLayerMgr;
-import com.telchina.tharcgiscore.layermgr.GraphicsOverlayConfig;
+import com.telchina.tharcgiscore.layermgr.GisGraphicsLayer;
+import com.telchina.tharcgiscore.layermgr.GisGraphicsOverlayConfig;
 import com.zcolin.frame.interfaces.ZSubmitListener;
 import com.zcolin.frame.permission.PermissionHelper;
 import com.zcolin.frame.permission.PermissionsResultAction;
@@ -46,7 +46,7 @@ import java.util.Map;
 public class GisMapOperateView extends RelativeLayout {
     private GisMapView       gisMapView;
     private LocationUtil     locationUtil;
-    private GraphicsLayerMgr graphicsLayerMgr;
+    private GisGraphicsLayer graphicsLayerMgr;
 
     private ZSubmitListener            onClearLister;         //点击清除数据按钮监听
     private LocationUtil.OnGetLocation onGetLocationListener;//定位回调
@@ -120,7 +120,7 @@ public class GisMapOperateView extends RelativeLayout {
                    .setMapTypeItemTextColor(mapTypeItemTextColor);
         }
 
-        graphicsLayerMgr = new GraphicsLayerMgr(gisMapView);
+        graphicsLayerMgr = new GisGraphicsLayer(gisMapView);
     }
 
 
@@ -197,7 +197,7 @@ public class GisMapOperateView extends RelativeLayout {
     /**
      * 图层管理类
      */
-    public GraphicsLayerMgr getGraphicsLayerMgr() {
+    public GisGraphicsLayer getGraphicsLayerMgr() {
         return graphicsLayerMgr;
     }
 
@@ -356,14 +356,14 @@ public class GisMapOperateView extends RelativeLayout {
     }
 
     public void highLightGeometry(Geometry geometry, @DrawableRes int pointPic) {
-        graphicsLayerMgr.highLightGeometry(geometry, GraphicsOverlayConfig.instanceHighlight().setPointPic(pointPic));
+        graphicsLayerMgr.highLightGeometry(geometry, GisGraphicsOverlayConfig.instanceHighlight().setPointPic(pointPic));
     }
 
-    public void highLightGeometry(Geometry geometry, GraphicsOverlayConfig config) {
+    public void highLightGeometry(Geometry geometry, GisGraphicsOverlayConfig config) {
         graphicsLayerMgr.highLightGeometry(geometry, config);
     }
 
-    public void highLightGeometry(GraphicsOverlay graphicsLayer, Geometry geometry, GraphicsOverlayConfig config) {
+    public void highLightGeometry(GraphicsOverlay graphicsLayer, Geometry geometry, GisGraphicsOverlayConfig config) {
         graphicsLayerMgr.highLightGeometry(graphicsLayer, geometry, config, false);
     }
 
@@ -372,7 +372,7 @@ public class GisMapOperateView extends RelativeLayout {
      *
      * @param isMoveToDest 是否移动到高亮区域
      */
-    public void highLightGeometry(GraphicsOverlay graphicsLayer, Geometry geometry, GraphicsOverlayConfig config, boolean isMoveToDest) {
+    public void highLightGeometry(GraphicsOverlay graphicsLayer, Geometry geometry, GisGraphicsOverlayConfig config, boolean isMoveToDest) {
         graphicsLayerMgr.highLightGeometry(graphicsLayer, geometry, config, isMoveToDest);
     }
 
@@ -428,26 +428,26 @@ public class GisMapOperateView extends RelativeLayout {
         graphicsLayerMgr.drawPictureMarker(graphicsOverlay, point, url);
     }
 
-    public void drawGeometry(Geometry geometry, GraphicsOverlayConfig config) {
+    public void drawGeometry(Geometry geometry, GisGraphicsOverlayConfig config) {
         graphicsLayerMgr.drawGeometry(geometry, config);
     }
 
-    public void drawGeometry(Geometry geometry, Map<String, Object> attr, GraphicsOverlayConfig config) {
+    public void drawGeometry(Geometry geometry, Map<String, Object> attr, GisGraphicsOverlayConfig config) {
         graphicsLayerMgr.drawGeometry(geometry, attr, config);
     }
 
-    public void drawGeometry(GraphicsOverlay overlay, Geometry geometry, GraphicsOverlayConfig config) {
+    public void drawGeometry(GraphicsOverlay overlay, Geometry geometry, GisGraphicsOverlayConfig config) {
         graphicsLayerMgr.drawGeometry(overlay, geometry, null, config);
     }
 
-    public void drawGeometry(GraphicsOverlay overlay, Geometry geometry, Map<String, Object> attr, GraphicsOverlayConfig config) {
+    public void drawGeometry(GraphicsOverlay overlay, Geometry geometry, Map<String, Object> attr, GisGraphicsOverlayConfig config) {
         graphicsLayerMgr.drawGeometry(overlay, geometry, attr, config);
     }
 
     /**
      * 地图绘制元素, 清除原图层
      */
-    public void drawGeometryWithClear(Geometry geometry, GraphicsOverlayConfig config) {
+    public void drawGeometryWithClear(Geometry geometry, GisGraphicsOverlayConfig config) {
         graphicsLayerMgr.clearDrawLayer();
         graphicsLayerMgr.drawGeometry(geometry, config);
     }
@@ -455,7 +455,7 @@ public class GisMapOperateView extends RelativeLayout {
     /**
      * 地图绘制元素, 清除原图层
      */
-    public void drawGeometryWithClear(Geometry geometry, Map<String, Object> attr, GraphicsOverlayConfig config) {
+    public void drawGeometryWithClear(Geometry geometry, Map<String, Object> attr, GisGraphicsOverlayConfig config) {
         graphicsLayerMgr.clearDrawLayer();
         graphicsLayerMgr.drawGeometry(geometry, attr, config);
     }
@@ -463,7 +463,7 @@ public class GisMapOperateView extends RelativeLayout {
     /**
      * 地图绘制元素, 清除原图层
      */
-    public void drawGeometryWithClear(GraphicsOverlay overlay, Geometry geometry, GraphicsOverlayConfig config) {
+    public void drawGeometryWithClear(GraphicsOverlay overlay, Geometry geometry, GisGraphicsOverlayConfig config) {
         graphicsLayerMgr.clearDrawLayer();
         graphicsLayerMgr.drawGeometry(overlay, geometry, null, config);
     }
@@ -471,7 +471,7 @@ public class GisMapOperateView extends RelativeLayout {
     /**
      * 地图绘制元素, 清除原图层
      */
-    public void drawGeometryWithClear(GraphicsOverlay overlay, Geometry geometry, Map<String, Object> attr, GraphicsOverlayConfig config) {
+    public void drawGeometryWithClear(GraphicsOverlay overlay, Geometry geometry, Map<String, Object> attr, GisGraphicsOverlayConfig config) {
         graphicsLayerMgr.clearDrawLayer();
         graphicsLayerMgr.drawGeometry(overlay, geometry, attr, config);
     }

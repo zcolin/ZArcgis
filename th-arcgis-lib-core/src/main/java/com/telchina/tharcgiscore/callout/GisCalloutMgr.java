@@ -23,7 +23,7 @@ import com.zcolin.frame.util.DisplayUtil;
 /**
  * 地图弹出菜单管理类
  */
-public class CalloutMgr {
+public class GisCalloutMgr {
 
     private int backgroundColor = Color.WHITE;
     private int borderColor     = Color.WHITE;
@@ -43,90 +43,90 @@ public class CalloutMgr {
 
     private Callout.Style.LeaderPosition leaderPosition = Callout.Style.LeaderPosition.LOWER_MIDDLE;
 
-    public static CalloutMgr instance(Callout callout, View view) {
-        return new CalloutMgr(callout, view);
+    public static GisCalloutMgr instance(Callout callout, View view) {
+        return new GisCalloutMgr(callout, view);
     }
 
-    public static CalloutMgr instance(Callout callout, Context context, String title) {
+    public static GisCalloutMgr instance(Callout callout, Context context, String title) {
         TextView textView = new TextView(context);
         textView.setText(title);
         int paddingHor = DisplayUtil.dip2px(context, 10);
         textView.setPadding(paddingHor, 0, paddingHor, 0);
-        return new CalloutMgr(callout, textView);
+        return new GisCalloutMgr(callout, textView);
     }
 
-    public CalloutMgr(Callout callout, View view) {
+    public GisCalloutMgr(Callout callout, View view) {
         this.callout = callout;
         this.contentView = view;
     }
 
-    public CalloutMgr offSet(int offSetX, int offSetY) {
+    public GisCalloutMgr offSet(int offSetX, int offSetY) {
         this.offSetX = offSetX;
         this.offSetY = offSetY;
         return this;
     }
 
-    public CalloutMgr leaderPosition(Callout.Style.LeaderPosition position) {
+    public GisCalloutMgr leaderPosition(Callout.Style.LeaderPosition position) {
         this.leaderPosition = position;
         return this;
     }
 
-    public CalloutMgr backgroundColor(int color) {
+    public GisCalloutMgr backgroundColor(int color) {
         this.backgroundColor = color;
         return this;
     }
 
-    public CalloutMgr borderColor(int color) {
+    public GisCalloutMgr borderColor(int color) {
         this.borderColor = color;
         return this;
     }
 
-    public CalloutMgr maxHeight(int maxHeight) {
+    public GisCalloutMgr maxHeight(int maxHeight) {
         this.maxHeight = maxHeight;
         return this;
     }
 
-    public CalloutMgr maxWidth(int maxWidth) {
+    public GisCalloutMgr maxWidth(int maxWidth) {
         this.maxWidth = maxWidth;
         return this;
     }
 
-    public CalloutMgr minHeight(int minHeight) {
+    public GisCalloutMgr minHeight(int minHeight) {
         this.minHeight = minHeight;
         return this;
     }
 
-    public CalloutMgr minWidth(int minWidth) {
+    public GisCalloutMgr minWidth(int minWidth) {
         this.minWidth = minWidth;
         return this;
     }
 
-    public CalloutMgr cornerRadius(int corner) {
+    public GisCalloutMgr cornerRadius(int corner) {
         this.cornerRadius = corner;
         return this;
     }
 
-    public CalloutMgr borderWidth(int borderWidth) {
+    public GisCalloutMgr borderWidth(int borderWidth) {
         this.borderWidth = borderWidth;
         return this;
     }
 
-    public CalloutMgr leaderLength(int leaderLength) {
+    public GisCalloutMgr leaderLength(int leaderLength) {
         this.leaderLength = leaderLength;
         return this;
     }
 
-    public CalloutMgr leaderWidth(int leaderWidth) {
+    public GisCalloutMgr leaderWidth(int leaderWidth) {
         this.leaderWidth = leaderWidth;
         return this;
     }
 
-    public CalloutMgr showOptions(Callout.ShowOptions showOptions) {
+    public GisCalloutMgr showOptions(Callout.ShowOptions showOptions) {
         this.showOptions = showOptions;
         return this;
     }
 
-    public CalloutMgr outSideTouchDismiss(GisMapView gisMapView) {
+    public GisCalloutMgr outSideTouchDismiss(GisMapView gisMapView) {
         gisMapView.addSingleTapListener(new GisMapView.SingleTapListener() {
             @Override
             public void onSingleTap(MotionEvent p) {

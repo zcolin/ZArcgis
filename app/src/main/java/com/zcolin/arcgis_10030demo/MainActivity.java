@@ -4,7 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import com.telchina.tharcgiscore.GisMapOperateView;
-import com.telchina.tharcgiscore.callout.CalloutMgr;
+import com.telchina.tharcgiscore.callout.GisCalloutMgr;
 import com.zcolin.frame.app.BaseFrameActivity;
 
 /**
@@ -25,11 +25,11 @@ public class MainActivity extends BaseFrameActivity {
 
     private void initData() {
         gisMapOperateView.initMapViews();
-        CalloutMgr.instance(gisMapOperateView.getCallout(), mActivity, "我是一个callout")
-                  .backgroundColor(Color.GREEN)
-                  .borderColor(Color.RED)
-                  .outSideTouchDismiss(gisMapOperateView.getGisMapView())
-                  .show(gisMapOperateView.getMapCenterPoint());
+        GisCalloutMgr.instance(gisMapOperateView.getCallout(), mActivity, "我是一个callout")
+                     .backgroundColor(Color.GREEN)
+                     .borderColor(Color.RED)
+                     .outSideTouchDismiss(gisMapOperateView.getGisMapView())
+                     .show(gisMapOperateView.getMapCenterPoint());
 
         gisMapOperateView.drawText(gisMapOperateView.getMapCenterPoint(), "我是绘制的文字");
         gisMapOperateView.drawPictureMarker(gisMapOperateView.getMapCenterPoint(), getResources().getDrawable(R.drawable.ic_launcher));

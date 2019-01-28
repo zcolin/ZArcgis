@@ -17,7 +17,7 @@ package com.telchina.tharcgiscore.util;
  * 谷歌中国地图和搜搜中国地图采用的是GCJ02地理坐标系; BD09坐标系：即百度坐标系，GCJ02坐标系经加密后的坐标系;
  * 搜狗坐标系、图吧坐标系等，估计也是在GCJ02基础上加密而成的。 chenhua
  */
-public class GeoCoordinateUtil {
+public class GeoCoordinateConvertUtil {
     private static double pi = 3.1415926535897932384626;
     private static double a  = 6378245.0;
     private static double ee = 0.00669342162296594323;
@@ -80,8 +80,8 @@ public class GeoCoordinateUtil {
      * (BD-09)-->84
      */
     public static double[] bd09ToGps84(double bdlon, double bdlat) {
-        double[] gcj02 = GeoCoordinateUtil.bd09ToGcj02(bdlon, bdlat);
-        return GeoCoordinateUtil.gcjToGps84(gcj02[0], gcj02[1]);
+        double[] gcj02 = GeoCoordinateConvertUtil.bd09ToGcj02(bdlon, bdlat);
+        return GeoCoordinateConvertUtil.gcjToGps84(gcj02[0], gcj02[1]);
     }
 
     public static boolean outOfChina(double lon, double lat) {

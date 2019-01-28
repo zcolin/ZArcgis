@@ -20,12 +20,12 @@ import java.util.Set;
 /**
  * 绘画图层管理抽象类
  */
-public abstract class AbstractGraphicsOverlayMgr {
+public abstract class GisAbstractGraphicsOverlay {
 
     protected HashMap<String, GraphicsOverlay> mapOverlay = new HashMap<>();//所有特征图层的集合
     protected GisMapView mapView;
 
-    public AbstractGraphicsOverlayMgr(GisMapView mapView) {
+    public GisAbstractGraphicsOverlay(GisMapView mapView) {
         this.mapView = mapView;
     }
 

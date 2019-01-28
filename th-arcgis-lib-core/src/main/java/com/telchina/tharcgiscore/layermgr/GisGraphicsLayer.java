@@ -39,7 +39,7 @@ import java.util.Map;
  * 主要有缓冲区图层、高亮图层、定位图层
  * 默认提供四个个图层，如果有更多需要，自己使用addLayer添加即可
  */
-public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
+public class GisGraphicsLayer extends GisAbstractGraphicsOverlay {
     private GraphicsOverlay     locationLayer;    //定位图层
     private GraphicsOverlay     highLightLayer;   //高亮图层
     private GraphicsOverlay     drawLayer;        //绘画图层
@@ -47,7 +47,7 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
     private PictureMarkerSymbol locationSymbol;
     private boolean isFirstLocation = true;//是否第一次定位，第一次需要延时设置中心点
 
-    public GraphicsLayerMgr(GisMapView mapView) {
+    public GisGraphicsLayer(GisMapView mapView) {
         super(mapView);
         resetAllLayers();
     }
@@ -160,7 +160,7 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
      * @param geometry 区域地理信息
      * @param config   设置的高亮属性
      */
-    public void highLightGeometry(Geometry geometry, GraphicsOverlayConfig config) {
+    public void highLightGeometry(Geometry geometry, GisGraphicsOverlayConfig config) {
         highLightGeometry(highLightLayer, geometry, config, false);
     }
 
@@ -170,12 +170,12 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
      * @param geometry 区域地理信息
      * @param config   设置的高亮属性
      */
-    public void highLightGeometry(GraphicsOverlay overlay, Geometry geometry, GraphicsOverlayConfig config, boolean isMoveToDest) {
+    public void highLightGeometry(GraphicsOverlay overlay, Geometry geometry, GisGraphicsOverlayConfig config, boolean isMoveToDest) {
         if (isMoveToDest) {
             mapView.zoomToGeometry(geometry);
         }
 
-        config = config == null ? GraphicsOverlayConfig.instanceHighlight() : config;
+        config = config == null ? GisGraphicsOverlayConfig.instanceHighlight() : config;
         drawGeometry(overlay, geometry, null, config);
     }
 
@@ -247,7 +247,7 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
      * @param geometry 缓冲区区域信息
      * @param config   样式配置
      */
-    public void bufferGeometryWithClear(Geometry geometry, GraphicsOverlayConfig config) {
+    public void bufferGeometryWithClear(Geometry geometry, GisGraphicsOverlayConfig config) {
         clearBufferLayer();
         bufferGeometry(geometry, config);
     }
@@ -259,7 +259,7 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
      * @param config   样式配置
      * @param distance 缓冲范围
      */
-    public void bufferGeometryWithClear(Geometry geometry, GraphicsOverlayConfig config, double distance) {
+    public void bufferGeometryWithClear(Geometry geometry, GisGraphicsOverlayConfig config, double distance) {
         clearBufferLayer();
         bufferGeometry(geometry, config, distance);
     }
@@ -272,7 +272,7 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
      * @param config   样式配置
      * @param distance 缓冲距离
      */
-    public Geometry bufferGeometry(Geometry geometry, GraphicsOverlayConfig config, double distance) {
+    public Geometry bufferGeometry(Geometry geometry, GisGraphicsOverlayConfig config, double distance) {
         if (distance > 0) {
             Geometry projectedGeometry = GeometryEngine.project(geometry, getArcMap().getSpatialReference());
             Polygon polygon = GeometryEngine.buffer(projectedGeometry, distance);
@@ -289,7 +289,7 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
      * @param geometry 缓冲区区域信息
      * @param config   样式配置
      */
-    public void bufferGeometry(Geometry geometry, GraphicsOverlayConfig config) {
+    public void bufferGeometry(Geometry geometry, GisGraphicsOverlayConfig config) {
         bufferGeometry(bufferLayer, geometry, config);
     }
 
@@ -299,8 +299,8 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
      * @param geometry 缓冲区区域信息
      * @param config   样式配置
      */
-    public void bufferGeometry(GraphicsOverlay overlay, Geometry geometry, GraphicsOverlayConfig config) {
-        config = config == null ? GraphicsOverlayConfig.instanceBuffer() : config;
+    public void bufferGeometry(GraphicsOverlay overlay, Geometry geometry, GisGraphicsOverlayConfig config) {
+        config = config == null ? GisGraphicsOverlayConfig.instanceBuffer() : config;
         drawGeometry(overlay, geometry, null, config);
     }
 
@@ -310,7 +310,7 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
      * @param geometry 区域地理信息
      * @param config   绘画样式配置
      */
-    public void drawGeometry(Geometry geometry, GraphicsOverlayConfig config) {
+    public void drawGeometry(Geometry geometry, GisGraphicsOverlayConfig config) {
         drawGeometry(geometry, null, config);
     }
 
@@ -321,7 +321,7 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
      * @param attr     属性信息
      * @param config   绘画样式配置
      */
-    public void drawGeometry(Geometry geometry, Map<String, Object> attr, GraphicsOverlayConfig config) {
+    public void drawGeometry(Geometry geometry, Map<String, Object> attr, GisGraphicsOverlayConfig config) {
         drawGeometry(drawLayer, geometry, null, config);
     }
 
@@ -332,8 +332,8 @@ public class GraphicsLayerMgr extends AbstractGraphicsOverlayMgr {
      * @param attr     属性信息
      * @param config   绘画样式配置
      */
-    public void drawGeometry(GraphicsOverlay overlay, Geometry geometry, Map<String, Object> attr, GraphicsOverlayConfig config) {
-        config = config == null ? GraphicsOverlayConfig.instanceDraw() : config;
+    public void drawGeometry(GraphicsOverlay overlay, Geometry geometry, Map<String, Object> attr, GisGraphicsOverlayConfig config) {
+        config = config == null ? GisGraphicsOverlayConfig.instanceDraw() : config;
         Graphic graphic = null;
         if (geometry.getGeometryType() == GeometryType.POINT || geometry.getGeometryType() == GeometryType.MULTIPOINT) {
             Point point = (Point) geometry;

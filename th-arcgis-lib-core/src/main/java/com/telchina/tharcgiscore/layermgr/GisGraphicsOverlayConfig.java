@@ -19,7 +19,7 @@ import com.telchina.tharcgiscore.R;
 /**
  * ArcGis地图绘画缓冲区属性设置
  */
-public class GraphicsOverlayConfig {
+public class GisGraphicsOverlayConfig {
 
     /**
      * 点图标的设置,图片的优先级高于纯色点
@@ -51,12 +51,12 @@ public class GraphicsOverlayConfig {
     private int                    polygonFillColor = Color.argb(90, 0, 191, 225);//面的填充的颜色
     private SimpleFillSymbol.Style polygonFillType  = SimpleFillSymbol.Style.SOLID;//填充面的类型，默认实心面
 
-    public static GraphicsOverlayConfig instanceBuffer() {
-        return new GraphicsOverlayConfig();
+    public static GisGraphicsOverlayConfig instanceBuffer() {
+        return new GisGraphicsOverlayConfig();
     }
 
-    public static GraphicsOverlayConfig instanceHighlight() {
-        GraphicsOverlayConfig overlayConfig = new GraphicsOverlayConfig();
+    public static GisGraphicsOverlayConfig instanceHighlight() {
+        GisGraphicsOverlayConfig overlayConfig = new GisGraphicsOverlayConfig();
         overlayConfig.pointColor = Color.RED;//点颜色
         overlayConfig.pointPic = R.drawable.zarcgis_icon_point_red;//点图标
         overlayConfig.lineColor = Color.argb(255, 65, 105, 225);//线的颜色
@@ -66,8 +66,8 @@ public class GraphicsOverlayConfig {
         return overlayConfig;
     }
     
-    public static GraphicsOverlayConfig instanceDraw() {
-        GraphicsOverlayConfig overlayConfig = new GraphicsOverlayConfig();
+    public static GisGraphicsOverlayConfig instanceDraw() {
+        GisGraphicsOverlayConfig overlayConfig = new GisGraphicsOverlayConfig();
         overlayConfig.pointColor = Color.argb(90, 255, 0, 0);//点颜色
         overlayConfig.pointPic = R.drawable.zarcgis_icon_point_blue;//点图标
         overlayConfig.lineColor = Color.argb(90, 255, 0, 0);//线的颜色
@@ -77,72 +77,72 @@ public class GraphicsOverlayConfig {
         return overlayConfig;
     }
 
-    public GraphicsOverlayConfig setPointColor(int pointColor) {
+    public GisGraphicsOverlayConfig setPointColor(int pointColor) {
         this.pointColor = pointColor;
         return this;
     }
 
-    public GraphicsOverlayConfig setPointType(SimpleMarkerSymbol.Style pointType) {
+    public GisGraphicsOverlayConfig setPointType(SimpleMarkerSymbol.Style pointType) {
         this.pointType = pointType;
         return this;
     }
 
-    public GraphicsOverlayConfig setPointSize(int pointSize) {
+    public GisGraphicsOverlayConfig setPointSize(int pointSize) {
         this.pointSize = pointSize;
         return this;
     }
 
-    public GraphicsOverlayConfig setPointPic(int pointPic) {
+    public GisGraphicsOverlayConfig setPointPic(int pointPic) {
         this.pointPic = pointPic;
         return this;
     }
 
-    public GraphicsOverlayConfig setPointPicWidth(int pointPicWidth) {
+    public GisGraphicsOverlayConfig setPointPicWidth(int pointPicWidth) {
         this.pointPicWidth = pointPicWidth;
         return this;
     }
 
-    public GraphicsOverlayConfig setPointPicHeight(int pointPicHeight) {
+    public GisGraphicsOverlayConfig setPointPicHeight(int pointPicHeight) {
         this.pointPicHeight = pointPicHeight;
         return this;
     }
 
-    public GraphicsOverlayConfig setLineColor(int lineColor) {
+    public GisGraphicsOverlayConfig setLineColor(int lineColor) {
         this.lineColor = lineColor;
         return this;
     }
 
-    public GraphicsOverlayConfig setLineWidth(int lineWidth) {
+    public GisGraphicsOverlayConfig setLineWidth(int lineWidth) {
         this.lineWidth = lineWidth;
         return this;
     }
 
-    public GraphicsOverlayConfig setLineType(SimpleLineSymbol.Style lineType) {
+    public GisGraphicsOverlayConfig setLineType(SimpleLineSymbol.Style lineType) {
         this.lineType = lineType;
         return this;
     }
 
-    public GraphicsOverlayConfig setPolygonLineColor(int polygonLineColor) {
+    public GisGraphicsOverlayConfig setPolygonLineColor(int polygonLineColor) {
         this.polygonLineColor = polygonLineColor;
         return this;
     }
 
-    public GraphicsOverlayConfig setPolygonLineWidth(int polygonLineWidth) {
+    public GisGraphicsOverlayConfig setPolygonLineWidth(int polygonLineWidth) {
         this.polygonLineWidth = polygonLineWidth;
         return this;
     }
 
-    public GraphicsOverlayConfig setPolygonLineType(SimpleLineSymbol.Style polygonLineType) {
+    public GisGraphicsOverlayConfig setPolygonLineType(SimpleLineSymbol.Style polygonLineType) {
         this.polygonLineType = polygonLineType;
         return this;
     }
 
-    public GraphicsOverlayConfig setPolygonFillColor(int polygonFillColor) {
+    public GisGraphicsOverlayConfig setPolygonFillColor(int polygonFillColor) {
         this.polygonFillColor = polygonFillColor;
         return this;
     }
 
-    public GraphicsOverlayConfig setPolygonFillType(SimpleFillSymbol.Style polygonFillType) {
+    public GisGraphicsOverlayConfig setPolygonFillType(SimpleFillSymbol.Style polygonFillType) {
         this.polygonFillType = polygonFillType;
         return this;
     }

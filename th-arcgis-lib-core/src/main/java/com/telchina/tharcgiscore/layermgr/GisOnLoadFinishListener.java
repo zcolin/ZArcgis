@@ -12,6 +12,6 @@ package com.telchina.tharcgiscore.layermgr;
 /**
  * 图层加载完毕监听
  */
-public interface OnLoadFinishListener {
+public interface GisOnLoadFinishListener {
     void onLoadFinish();
 }

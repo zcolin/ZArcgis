@@ -37,9 +37,9 @@ import java.util.concurrent.Future;
 /**
  * 动态图层管理类
  */
-public class MapImageLayerMgr extends AbstractOperationalLayerMgr {
+public class GisMapImageLayer extends GisAbstractOperationalLayer {
 
-    public MapImageLayerMgr(GisMapView gisMapView) {
+    public GisMapImageLayer(GisMapView gisMapView) {
         super(gisMapView);
     }
 
@@ -88,7 +88,7 @@ public class MapImageLayerMgr extends AbstractOperationalLayerMgr {
         }).show();
     }
 
-    public void addMapImageLayersAsync(Context context, HashMap<String, String> layers, OnLoadFinishListener listener) {
+    public void addMapImageLayersAsync(Context context, HashMap<String, String> layers, GisOnLoadFinishListener listener) {
         ZDialogAsyncProgress.instance(context).setDoInterface(new ZDialogAsyncProgress.DoInterface() {
             @Override
             public ZDialogAsyncProgress.ProcessInfo onDoInback() {
@@ -215,6 +215,7 @@ public class MapImageLayerMgr extends AbstractOperationalLayerMgr {
 
     /**
      * 异步查询，有进度条
+     * 
      *
      * @param onSearchFinishListener 查询完成监听
      */

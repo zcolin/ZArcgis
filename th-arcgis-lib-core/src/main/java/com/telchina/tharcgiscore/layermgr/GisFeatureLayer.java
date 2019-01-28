@@ -9,12 +9,9 @@
 
 package com.telchina.tharcgiscore.layermgr;
 
-import android.content.Context;
-
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.FeatureQueryResult;
-import com.esri.arcgisruntime.data.Geodatabase;
-import com.esri.arcgisruntime.data.GeodatabaseFeatureTable;
+import com.esri.arcgisruntime.data.FeatureTable;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Geometry;
@@ -22,9 +19,9 @@ import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.layers.Layer;
 import com.telchina.tharcgiscore.GisMapView;
-import com.zcolin.gui.ZDialogAsyncProgress;
+import com.zcolin.frame.util.LogUtil;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -33,16 +30,10 @@ import java.util.concurrent.Future;
 /**
  * 特征图层管理类
  */
-public class FeatureLayerMgr extends AbstractOperationalLayerMgr {
-    private String geoDatabase;
+public class GisFeatureLayer extends GisAbstractOperationalLayer {
 
-    public FeatureLayerMgr(GisMapView mapView, String geoDatabase) {
+    public GisFeatureLayer(GisMapView mapView) {
         super(mapView);
-        this.geoDatabase = geoDatabase;
-    }
-
-    public Geodatabase getGeoDatabase(String path) {
-        return new Geodatabase(path);
     }
 
     /**
@@ -55,89 +46,6 @@ public class FeatureLayerMgr extends AbstractOperationalLayerMgr {
             return (FeatureLayer) getLayer(key);
         }
         return null;
-    }
-
-    /**
-     * 根据key值批量从geodatabase中查询添加特征图层并添加到地图上
-     */
-    public void addFeatureLayer(String... keys) {
-        Geodatabase localGdb = getGeoDatabase(geoDatabase);
-        if (localGdb == null || keys == null) {
-            return;
-        }
-
-        List<GeodatabaseFeatureTable> list = localGdb.getGeodatabaseFeatureTables();
-        for (String key : keys) {
-            for (GeodatabaseFeatureTable gdbFeatureTable : list) {
-                if (gdbFeatureTable.getTableName().equals(key) && gdbFeatureTable.hasGeometry()) {
-                    FeatureLayer featureLayer = new FeatureLayer(gdbFeatureTable);
-                    featureLayer.setLabelsEnabled(true);
-                    String tableName = gdbFeatureTable.getTableName();
-                    addLayer(tableName, featureLayer);
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
-     * 有进度条，异步添加图层
-     */
-    public void addFeatureLayerAsync(Context context, OnLoadFinishListener listener, String... keys) {
-        ZDialogAsyncProgress.instance(context).setDoInterface(new ZDialogAsyncProgress.DoInterface() {
-            @Override
-            public ZDialogAsyncProgress.ProcessInfo onDoInback() {
-                addFeatureLayer(keys);
-                return null;
-            }
-
-            @Override
-            public void onPostExecute(ZDialogAsyncProgress.ProcessInfo info) {
-                if (listener != null) {
-                    listener.onLoadFinish();
-                }
-            }
-        }).show();
-    }
-
-    /**
-     * 添加矢量数据
-     */
-    public void addAllFeatureLayer() {
-        Geodatabase localGdb = getGeoDatabase(geoDatabase);
-        if (localGdb == null) {
-            return;
-        }
-        List<GeodatabaseFeatureTable> list = localGdb.getGeodatabaseFeatureTables();
-        for (int i = list.size() - 1; i >= 0; i--) {
-            GeodatabaseFeatureTable gdbFeatureTable = list.get(i);
-            if (gdbFeatureTable.hasGeometry()) {
-                FeatureLayer featureLayer = new FeatureLayer(gdbFeatureTable);
-                featureLayer.setLabelsEnabled(true);
-                String tableName = gdbFeatureTable.getTableName();
-                addLayer(tableName, featureLayer);
-            }
-        }
-    }
-
-    /**
-     * 有进度条，异步添加图层
-     */
-    public void addAllFeatureLayerAsync(Context context, OnLoadFinishListener listener) {
-        ZDialogAsyncProgress.instance(context).setDoInterface(new ZDialogAsyncProgress.DoInterface() {
-            @Override
-            public ZDialogAsyncProgress.ProcessInfo onDoInback() {
-                addAllFeatureLayer();
-                return null;
-            }
-
-            @Override
-            public void onPostExecute(ZDialogAsyncProgress.ProcessInfo info) {
-                if (listener != null) {
-                    listener.onLoadFinish();
-                }
-            }
-        }).show();
     }
 
     /**
@@ -232,5 +140,74 @@ public class FeatureLayerMgr extends AbstractOperationalLayerMgr {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 增加要素
+     */
+    public void addFeatureToLayer(FeatureTable featureTable, Geometry geometry, HashMap<String, Object> attributes) {
+        if (featureTable.isEditable() && featureTable.canAdd()) {
+            Feature feature = featureTable.createFeature();
+            feature.setGeometry(geometry);
+            if (attributes != null && attributes.size() > 0) {
+                for (Map.Entry<String, Object> stringObjectEntry : attributes.entrySet()) {
+                    feature.getAttributes().put(stringObjectEntry.getKey(), stringObjectEntry.getValue());
+                }
+            }
+
+            featureTable.addFeatureAsync(feature);
+        } else {
+            LogUtil.e("deleteFeatureFromLayer", "要素不支持新增");
+        }
+    }
+
+    /**
+     * 增加要素
+     */
+    public void addFeatureToLayer(FeatureTable featureTable, Feature feature) {
+        featureTable.addFeatureAsync(feature);
+    }
+
+    /**
+     * 增加要素
+     */
+    public void addFeatureToLayer(FeatureTable featureTable, Iterable<Feature> features) {
+        featureTable.addFeaturesAsync(features);
+    }
+
+    /**
+     * 更新要素
+     */
+    public void updateFeatureToLayer(FeatureTable featureTable, Feature feature) {
+        if (featureTable.isEditable() && featureTable.canUpdate(feature)) {
+            featureTable.updateFeatureAsync(feature);
+        } else {
+            LogUtil.e("deleteFeatureFromLayer", "要素不支持新增");
+        }
+    }
+
+    /**
+     * 更新要素
+     */
+    public void updateFeatureToLayer(FeatureTable featureTable, Iterable<Feature> features) {
+        featureTable.updateFeaturesAsync(features);
+    }
+
+    /**
+     * 删除要素
+     */
+    public void deleteFeatureFromLayer(FeatureTable featureTable, Feature feature) throws Exception {
+        if (featureTable.isEditable() && featureTable.canDelete(feature)) {
+            featureTable.deleteFeatureAsync(feature);
+        } else {
+            LogUtil.e("deleteFeatureFromLayer", "要素不支持删除");
+        }
+    }
+
+    /**
+     * 删除要素
+     */
+    public void deleteFeatureFromLayer(FeatureTable featureTable, Iterable<Feature> features) throws Exception {
+        featureTable.deleteFeaturesAsync(features);
     }
 }

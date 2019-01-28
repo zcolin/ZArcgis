@@ -24,12 +24,12 @@ import java.util.Set;
 /**
  * 业务图层管理抽象类
  */
-public abstract class AbstractOperationalLayerMgr {
+public abstract class GisAbstractOperationalLayer {
 
     protected HashMap<String, Layer> mapLayer = new HashMap<>();//所有特征图层的集合
     protected GisMapView mapView;
 
-    public AbstractOperationalLayerMgr(GisMapView mapView) {
+    public GisAbstractOperationalLayer(GisMapView mapView) {
         this.mapView = mapView;
     }
 
@@ -65,7 +65,7 @@ public abstract class AbstractOperationalLayerMgr {
     /**
      * 有进度条，异步添加图层
      */
-    public void addLayerAsync(Context context, String key, Layer layer, OnLoadFinishListener listener) {
+    public void addLayerAsync(Context context, String key, Layer layer, GisOnLoadFinishListener listener) {
         HashMap<String, Layer> hashMap = new HashMap<>(1);
         hashMap.put(key, layer);
         addLayerAsync(context, hashMap, listener);
@@ -74,7 +74,7 @@ public abstract class AbstractOperationalLayerMgr {
     /**
      * 有进度条，异步添加图层
      */
-    public void addLayerAsync(Context context, HashMap<String, Layer> mapLayer, OnLoadFinishListener listener) {
+    public void addLayerAsync(Context context, HashMap<String, Layer> mapLayer, GisOnLoadFinishListener listener) {
         ZDialogAsyncProgress.instance(context).setDoInterface(new ZDialogAsyncProgress.DoInterface() {
             @Override
             public ZDialogAsyncProgress.ProcessInfo onDoInback() {
