@@ -233,12 +233,4 @@ public class FeatureLayerMgr extends AbstractOperationalLayerMgr {
         }
         return null;
     }
-
-
-    /**
-     * 图层加载完毕监听
-     */
-    public interface OnLoadFinishListener {
-        void onLoadFinish();
-    }
 }

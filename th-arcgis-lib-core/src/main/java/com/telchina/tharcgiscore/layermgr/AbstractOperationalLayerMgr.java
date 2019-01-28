@@ -9,10 +9,13 @@
 
 package com.telchina.tharcgiscore.layermgr;
 
+import android.content.Context;
+
 import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.telchina.tharcgiscore.GisMapView;
+import com.zcolin.gui.ZDialogAsyncProgress;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,6 +60,37 @@ public abstract class AbstractOperationalLayerMgr {
     public void addLayer(int index, String key, Layer layer) {
         mapLayer.put(key, layer);
         getArcMap().getOperationalLayers().add(index, layer);
+    }
+
+    /**
+     * 有进度条，异步添加图层
+     */
+    public void addLayerAsync(Context context, String key, Layer layer, OnLoadFinishListener listener) {
+        HashMap<String, Layer> hashMap = new HashMap<>(1);
+        hashMap.put(key, layer);
+        addLayerAsync(context, hashMap, listener);
+    }
+
+    /**
+     * 有进度条，异步添加图层
+     */
+    public void addLayerAsync(Context context, HashMap<String, Layer> mapLayer, OnLoadFinishListener listener) {
+        ZDialogAsyncProgress.instance(context).setDoInterface(new ZDialogAsyncProgress.DoInterface() {
+            @Override
+            public ZDialogAsyncProgress.ProcessInfo onDoInback() {
+                for (Map.Entry<String, Layer> stringLayerEntry : mapLayer.entrySet()) {
+                    addLayer(stringLayerEntry.getKey(), stringLayerEntry.getValue());
+                }
+                return null;
+            }
+
+            @Override
+            public void onPostExecute(ZDialogAsyncProgress.ProcessInfo info) {
+                if (listener != null) {
+                    listener.onLoadFinish();
+                }
+            }
+        }).show();
     }
 
     /**
