@@ -11,9 +11,4 @@
         <item name="android:inAnimation">@anim/zarcgis_dialog_left_in</item>
         <item name="android:outAnimation">@anim/zarcgis_dialog_left_out</item>
     </style>
-
-    <style name="zarcgis_style_dialog_righttoleft">
-        <item name="android:inAnimation">@anim/zarcgis_dialog_left_out</item>
-        <item name="android:outAnimation">@anim/zarcgis_dialog_left_in</item>
-    </style>
 </resources>
