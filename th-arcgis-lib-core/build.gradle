@@ -22,7 +22,7 @@ android {
     }
 
     packagingOptions {
-        exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/LGPL2.1' 
         exclude 'META-INF/LICENSE' 
         exclude 'META-INF/NOTICE'
     }
@@ -34,7 +34,7 @@ android {
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
-    compileOnly 'com.github.zcolin:ZFrame:2.0.6'
+    compileOnly 'com.github.zcolin:ZFrame:2.0.7'
     compileOnly 'com.github.zcolin:ZRecyclerView:2.1.5'
     compileOnly 'com.github.zcolin:ZUILib:2.0.0'
     compileOnly "com.android.support:appcompat-v7:$supprotVersion"

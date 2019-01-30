@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     >
 
-    <com.telchina.tharcgiscore.GisMapOperateView
+    <com.telchina.arcgis.core.GisMapOperateView
         android:id="@+id/gismap_view"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,5 +15,5 @@
         app:menuBarGravity="right_top"
         app:menuBarOrientation="vertical">
 
-    </com.telchina.tharcgiscore.GisMapOperateView>
+    </com.telchina.arcgis.core.GisMapOperateView>
 </LinearLayout>
