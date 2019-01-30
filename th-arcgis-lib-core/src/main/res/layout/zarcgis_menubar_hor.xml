@@ -8,20 +8,32 @@
         android:id="@+id/iv_maptype"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/zarcgis_icon_maptype"/>
+        android:src="@drawable/zarcgis_icon_maptype"/>
 
     <ImageView
         android:id="@+id/iv_clear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/zarcgis_icon_remove"/>
+        android:src="@drawable/zarcgis_icon_remove"/>
 
     <ImageView
         android:id="@+id/iv_reset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/zarcgis_icon_reset"
+        android:src="@drawable/zarcgis_icon_reset"
         />
+
+    <ImageView
+        android:id="@+id/iv_measure_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/zarcgis_icon_maptype"/>
+
+    <ImageView
+        android:id="@+id/iv_measure_area"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/zarcgis_icon_remove"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -31,8 +43,8 @@
             android:id="@+id/iv_lcoation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/zarcgis_icon_location"
             android:checked="false"
+            android:src="@drawable/zarcgis_icon_location"
             android:textOff=""
             android:textOn=""
             />

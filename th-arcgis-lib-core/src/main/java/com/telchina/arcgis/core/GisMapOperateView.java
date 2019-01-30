@@ -73,6 +73,9 @@ public class GisMapOperateView extends RelativeLayout {
         Drawable resetIcon = array.getDrawable(R.styleable.GisMapOperateView_resetIcon);
         Drawable clearIcon = array.getDrawable(R.styleable.GisMapOperateView_clearIcon);
         Drawable mapTypeItemBackground = array.getDrawable(R.styleable.GisMapOperateView_mapTypeItemBackground);
+
+        int measureToolVisibility = array.getInteger(R.styleable.GisMapOperateView_measureToolVisibility, VISIBLE);
+
         ColorStateList mapTypeItemTextColor = array.getColorStateList(R.styleable.GisMapOperateView_mapTypeItemTextColor);
         int mapTypeAnim = array.getResourceId(R.styleable.GisMapOperateView_mapTypeDialogAnim, 0);
         array.recycle();
@@ -117,6 +120,7 @@ public class GisMapOperateView extends RelativeLayout {
                    .setMapTypeGravity(menuBarGravity)
                    .setMapTypeItemBackground(mapTypeItemBackground)
                    .setMenuBarPadding(menuBarPaddingLeft, menuBarPaddingTop, menuBarPaddingRight, menuBarPaddingBottom)
+                   .setMeasureToolVisibility(measureToolVisibility)
                    .setMapTypeItemTextColor(mapTypeItemTextColor);
         }
 
@@ -270,12 +274,24 @@ public class GisMapOperateView extends RelativeLayout {
         gisMapView.addSingleTapListener(singleTapListener);
     }
 
+    public void addSingleTapListener(GisMapView.SingleTapListener singleTapListener, int priority) {
+        gisMapView.addSingleTapListener(singleTapListener, priority);
+    }
+
     public void addDoubleTapListener(GisMapView.DoubleTapListener doubleTapListener) {
         gisMapView.addDoubleTapListener(doubleTapListener);
     }
 
+    public void addDoubleTapListener(GisMapView.DoubleTapListener doubleTapListener, int priority) {
+        gisMapView.addDoubleTapListener(doubleTapListener, priority);
+    }
+
     public void addLongPressListener(GisMapView.LongPressListener longPressListener) {
         gisMapView.addLongPressListener(longPressListener);
+    }
+
+    public void addLongPressListener(GisMapView.LongPressListener longPressListener, int priority) {
+        gisMapView.addLongPressListener(longPressListener, priority);
     }
 
     public void removeSingleTapListener(GisMapView.SingleTapListener singleTapListener) {

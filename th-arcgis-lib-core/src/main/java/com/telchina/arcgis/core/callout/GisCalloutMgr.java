@@ -129,9 +129,10 @@ public class GisCalloutMgr {
     public GisCalloutMgr outSideTouchDismiss(GisMapView gisMapView) {
         gisMapView.addSingleTapListener(new GisMapView.SingleTapListener() {
             @Override
-            public void onSingleTap(MotionEvent p) {
+            public boolean onSingleTap(MotionEvent p) {
                 callout.dismiss();
                 gisMapView.removeSingleTapListener(this);
+                return false;
             }
         });
         return this;

@@ -78,7 +78,9 @@ public class GisMapView extends FrameLayout {
             public boolean onSingleTapConfirmed(MotionEvent e) {
                 if (singleTapListener.size() > 0) {
                     for (SingleTapListener tapListener : singleTapListener) {
-                        tapListener.onSingleTap(e);
+                        if (tapListener.onSingleTap(e)) {
+                            break;
+                        }
                     }
                     return true;
                 }
@@ -385,9 +387,16 @@ public class GisMapView extends FrameLayout {
         getMap().removeDoneLoadingListener(runnable);
     }
 
+
     public void addSingleTapListener(SingleTapListener singleTapListener) {
         if (!this.singleTapListener.contains(singleTapListener)) {
             this.singleTapListener.add(singleTapListener);
+        }
+    }
+
+    public void addSingleTapListener(SingleTapListener singleTapListener, int priority) {
+        if (!this.singleTapListener.contains(singleTapListener)) {
+            this.singleTapListener.add(priority, singleTapListener);
         }
     }
 
@@ -397,9 +406,21 @@ public class GisMapView extends FrameLayout {
         }
     }
 
+    public void addDoubleTapListener(DoubleTapListener doubleTapListener, int priority) {
+        if (!this.doubleTapListener.contains(doubleTapListener)) {
+            this.doubleTapListener.add(priority, doubleTapListener);
+        }
+    }
+
     public void addLongPressListener(LongPressListener longPressListener) {
         if (!this.longPressListener.contains(longPressListener)) {
             this.longPressListener.add(longPressListener);
+        }
+    }
+
+    public void addLongPressListener(LongPressListener longPressListener, int priority) {
+        if (!this.longPressListener.contains(longPressListener)) {
+            this.longPressListener.add(priority, longPressListener);
         }
     }
 
@@ -430,14 +451,23 @@ public class GisMapView extends FrameLayout {
     }
 
     public interface SingleTapListener {
-        void onSingleTap(MotionEvent p);
+        /**
+         * @return 是否拦截后续请求
+         */
+        boolean onSingleTap(MotionEvent p);
     }
 
+    /**
+     * @return 是否拦截后续请求
+     */
     public interface DoubleTapListener {
-        void onDoubleTap(MotionEvent p);
+        boolean onDoubleTap(MotionEvent p);
     }
 
+    /**
+     * @return 是否拦截后续请求
+     */
     public interface LongPressListener {
-        void onLongPress(MotionEvent p);
+        boolean onLongPress(MotionEvent p);
     }
 }

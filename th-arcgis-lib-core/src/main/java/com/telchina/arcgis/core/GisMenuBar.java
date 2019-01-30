@@ -11,7 +11,9 @@ package com.telchina.arcgis.core;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,6 +22,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.amap.api.location.AMapLocation;
+import com.esri.arcgisruntime.geometry.SpatialReference;
+import com.telchina.arcgis.core.measure.GisMeasureDraw;
+import com.telchina.arcgis.core.measure.MeasureVariable;
 import com.zcolin.frame.util.DisplayUtil;
 import com.zcolin.libamaplocation.LocationUtil;
 
@@ -37,6 +42,10 @@ public class GisMenuBar extends LinearLayout {
     private int            mapTypeAnim;
     private int            mapTypeGravity;
     private ProgressBar    progressBar;
+    private GisMeasureDraw arcgisMeasure;
+    private ImageView      ivMeasureLength;
+    private ImageView      ivMeasureArea;
+    private MeasureVariable.DrawType drawType = null;
 
     public GisMenuBar(Context context) {
         this(context, null);
@@ -54,20 +63,29 @@ public class GisMenuBar extends LinearLayout {
         ivLocation = findViewById(R.id.iv_lcoation);
         ivMapType = findViewById(R.id.iv_maptype);
         progressBar = findViewById(R.id.progressbar_gps);
+        ivMeasureLength = findViewById(R.id.iv_measure_distance);
+        ivMeasureArea = findViewById(R.id.iv_measure_area);
 
         ivReset.setOnClickListener(v -> gisMapOperateView.reset());
-        ivClear.setOnClickListener(v -> gisMapOperateView.clear());
+        ivClear.setOnClickListener(v -> {
+            arcgisMeasure.clear();
+            gisMapOperateView.clear();
+            drawType = null;
+        });
         ivLocation.setOnClickListener(v -> {
             progressBar.setVisibility(VISIBLE);
+            ivLocation.setVisibility(GONE);
             gisMapOperateView.location(new LocationUtil.OnGetLocation() {
                 @Override
                 public void getLocation(AMapLocation aMapLocation) {
                     progressBar.setVisibility(GONE);
+                    ivLocation.setVisibility(VISIBLE);
                 }
 
                 @Override
                 public void locationFail() {
                     progressBar.setVisibility(GONE);
+                    ivLocation.setVisibility(VISIBLE);
                 }
             });
         });
@@ -93,6 +111,38 @@ public class GisMenuBar extends LinearLayout {
                 gisMapTypeDialog.show();
             }
         });
+
+        ivMeasureLength.setOnClickListener(view -> {
+            if (drawType == null) {
+                drawType = MeasureVariable.DrawType.LINE;
+                ivMeasureLength.setBackgroundColor(Color.parseColor("#88000000"));
+            } else if (drawType == MeasureVariable.DrawType.LINE) {
+                drawType = null;
+                arcgisMeasure.clear();
+                ivMeasureLength.setBackgroundColor(Color.TRANSPARENT);
+            }
+        });
+        ivMeasureArea.setOnClickListener(view -> {
+            if (drawType == null) {
+                drawType = MeasureVariable.DrawType.POLYGON;
+                ivMeasureArea.setBackgroundColor(Color.parseColor("#88000000"));
+            } else if (drawType == MeasureVariable.DrawType.POLYGON) {
+                drawType = null;
+                arcgisMeasure.clear();
+                ivMeasureArea.setBackgroundColor(Color.TRANSPARENT);
+            }
+        });
+        arcgisMeasure = new GisMeasureDraw(gisMapOperateView.getGisMapView().getMapView());
+        gisMapOperateView.addSingleTapListener(e -> {
+            if (drawType == MeasureVariable.DrawType.LINE) {
+                arcgisMeasure.startMeasuredLength(e.getX(), e.getY());
+                return true;
+            } else if (drawType == MeasureVariable.DrawType.POLYGON) {
+                arcgisMeasure.startMeasuredArea(e.getX(), e.getY());
+                return true;
+            }
+            return false;
+        }, 0);
         return this;
     }
 
@@ -198,6 +248,52 @@ public class GisMenuBar extends LinearLayout {
     public GisMenuBar setClearIcon(Drawable clearIcon) {
         if (clearIcon != null) {
             ivClear.setImageDrawable(clearIcon);
+        }
+        return this;
+    }
+
+
+    public GisMenuBar setSpatialReference(SpatialReference spatialReference) {
+        if (arcgisMeasure != null) {
+            arcgisMeasure.setSpatialReference(spatialReference);
+        }
+        return this;
+    }
+
+    public GisMenuBar setLengthType(MeasureVariable.Measure type) {
+        if (arcgisMeasure != null) {
+            arcgisMeasure.setLengthType(type);
+        }
+        return this;
+    }
+
+    public GisMenuBar setAreaType(MeasureVariable.Measure type) {
+        if (arcgisMeasure != null) {
+            arcgisMeasure.setAreaType(type);
+        }
+        return this;
+    }
+
+    public GisMenuBar setMeasureLengthImage(@DrawableRes int measureLengthImage) {
+        if (ivMeasureLength != null) {
+            ivMeasureLength.setImageResource(measureLengthImage);
+        }
+        return this;
+    }
+
+    public GisMenuBar setMeasureAreaImage(@DrawableRes int measureAreaImage) {
+        if (ivMeasureArea != null) {
+            ivMeasureArea.setImageResource(measureAreaImage);
+        }
+        return this;
+    }
+
+    public GisMenuBar setMeasureToolVisibility(int visibility) {
+        if (ivMeasureArea != null) {
+            ivMeasureArea.setVisibility(visibility);
+        }
+        if (ivMeasureLength != null) {
+            ivMeasureLength.setVisibility(visibility);
         }
         return this;
     }

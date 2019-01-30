@@ -26,5 +26,11 @@
             <enum name="left_bottom" value="83"/>
             <enum name="right_bottom" value="85"/>
         </attr>
+
+        <attr name="measureToolVisibility" format="enum">
+            <enum name="visible" value="0"/>
+            <enum name="invisible" value="4"/>
+            <enum name="gone" value="8"/>
+        </attr>
     </declare-styleable>
 </resources>
