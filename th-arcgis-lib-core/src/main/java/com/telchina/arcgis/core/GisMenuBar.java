@@ -68,8 +68,11 @@ public class GisMenuBar extends LinearLayout {
 
         ivReset.setOnClickListener(v -> gisMapOperateView.reset());
         ivClear.setOnClickListener(v -> {
-            arcgisMeasure.clear();
             gisMapOperateView.clear();
+
+            ivMeasureArea.setBackgroundColor(Color.TRANSPARENT);
+            ivMeasureLength.setBackgroundColor(Color.TRANSPARENT);
+            arcgisMeasure.clear();
             drawType = null;
         });
         ivLocation.setOnClickListener(v -> {
