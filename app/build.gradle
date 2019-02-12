@@ -42,7 +42,7 @@ android {
             shrinkResources false
             signingConfig signingConfigs.debug
         }
-
+ 
         release {
             minifyEnabled true
             shrinkResources true //移除无用的resource文件（如果使用getIdentifier函数的需要关闭）
@@ -72,7 +72,7 @@ dependencies {
     implementation "com.android.support:cardview-v7:$supprotVersion"
     implementation "com.android.support:design:$supprotVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.github.zcolin:ZFrame:2.0.6'
+    implementation 'com.github.zcolin:ZFrame:2.0.7'
     implementation 'com.github.zcolin:ZRecyclerView:2.1.5'
     implementation 'com.github.zcolin:ZUILib:2.0.0'
 }
