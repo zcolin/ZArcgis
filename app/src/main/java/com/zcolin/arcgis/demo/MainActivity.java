@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.telchina.arcgis.core.GisMapOperateView;
 import com.telchina.arcgis.core.callout.GisCalloutMgr;
+import com.telchina.arcgis.core.layermgr.GisGraphicsOverlayConfig;
 import com.zcolin.frame.app.BaseFrameActivity;
 
 /**
@@ -33,5 +34,6 @@ public class MainActivity extends BaseFrameActivity {
 
         gisMapOperateView.drawText(gisMapOperateView.getMapCenterPoint(), "我是绘制的文字");
         gisMapOperateView.drawPictureMarker(gisMapOperateView.getMapCenterPoint(), getResources().getDrawable(R.drawable.ic_launcher));
+        gisMapOperateView.getGraphicsLayerMgr().bufferGeometry(gisMapOperateView.getMapCenterPoint(), GisGraphicsOverlayConfig.instanceBuffer(), 5000);
     }
 }

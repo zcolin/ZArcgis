@@ -22,24 +22,24 @@ android {
     }
 
     packagingOptions {
-        exclude 'META-INF/LGPL2.1' 
-        exclude 'META-INF/LICENSE' 
+        exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
     }
     //解决multiDex找不到application的问题，在独立成依赖之后可以去掉
     dexOptions {
         preDexLibraries = false
     }
-}   
+}
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
-    compileOnly 'com.github.zcolin:ZFrame:2.0.7'
-    compileOnly 'com.github.zcolin:ZRecyclerView:2.1.5'
-    compileOnly 'com.github.zcolin:ZUILib:2.0.0'
-    compileOnly "com.android.support:recyclerview-v7:$supprotVersion"
+    compileOnly "com.android.support:appcompat-v7:$supprotVersion"
+    implementation "com.android.support:recyclerview-v7:$supprotVersion"
+    implementation 'com.github.zcolin:ZFrame:2.0.9'
+    implementation 'com.github.zcolin:ZRecyclerView:2.1.5'
+    implementation 'com.github.zcolin:ZUILib:2.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation "com.android.support:appcompat-v7:$supprotVersion"
     api 'com.github.zcolin.TPartyLibs:libAmapLocation:1.1.4'
     api 'com.esri.arcgisruntime:arcgis-android:100.3.0'
 }
