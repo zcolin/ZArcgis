@@ -24,7 +24,7 @@ Gradle
 
 class structure
 -
-![](uml.png)
+![](plantuml.png)
 
 USAGE
 -

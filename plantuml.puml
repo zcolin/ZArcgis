@@ -1,47 +1,59 @@
 @startuml
 Title "ZArcgis类图"
 
-class GisCalloutMgr
-class GeoCoordinateConvertUtil
-class WktConvertUtil
-
-GisAbstractGraphicsOverlay<|-- GisGraphicsLayer
-GisAbstractOperationalLayer<|-- GisFeatureLayer
-GisFeatureLayer<|-- GisGeoDatabaseLayer
-GisFeatureLayer<|-- GisShapeFileLayer
-GisAbstractOperationalLayer<|-- GisMapImageLayer
-GisGraphicsLayer..>GisGraphicsOverlayConfig
-
-abstract class GisAbstractGraphicsOverlay{
-+ GisAbstractGraphicsOverlay(GisMapView mapView)
+namespace 工具类{
+    class GisCalloutMgr
+    class GeoCoordinateConvertUtil
+    class WktConvertUtil
 }
 
-abstract class GisAbstractOperationalLayer{
-+ GisAbstractOperationalLayer(GisMapView mapView)
+class GisMapView
+
+namespace 图层管理类{
+    GisAbstractGraphicsOverlay<|-- GisGraphicsLayer
+    GisAbstractOperationalLayer<|-- GisFeatureLayer
+    GisFeatureLayer<|-- GisGeoDatabaseLayer
+    GisFeatureLayer<|-- GisShapeFileLayer
+    GisAbstractOperationalLayer<|-- GisMapImageLayer
+    GisGraphicsLayer.>GisGraphicsOverlayConfig
+    
+    
+    abstract class GisAbstractGraphicsOverlay{
+        + GisAbstractGraphicsOverlay(GisMapView mapView)
+    }
+    
+    abstract class GisAbstractOperationalLayer{
+        + GisAbstractOperationalLayer(GisMapView mapView)
+    }
+    
+    class GisGraphicsOverlayConfig{
+        + static GisGraphicsOverlayConfig instanceBuffer()
+        + static GisGraphicsOverlayConfig instanceHighlight()
+        + static GisGraphicsOverlayConfig instanceDraw()
+    }
 }
 
-class GisGraphicsOverlayConfig{
-+ static GisGraphicsOverlayConfig instanceBuffer()
-+ static GisGraphicsOverlayConfig instanceHighlight()
-+ static GisGraphicsOverlayConfig instanceDraw()
-}
-
+图层管理类-->GisMapView
 RelativeLayout<|--GisMapOperateView
 FrameLayout<|--GisMapView
 GisMapOperateView-->GisMapView
-GisMapOperateView..>GisMenuBar
+GisMapOperateView<->GisMenuBar
 GisMenuBar-->GisMapTypeDialog
 GisMapOperateView-->GisMapConfig
 GisMapView-->GisMapConfig
-GisMapOperateView-->GisGraphicsLayer
+
+
+class GisMapOperateView{
+    - GisGraphicsLayer gisGraphicsLayer
+}
 
 class GisMapView{
-+ void init(GisMapConfig gisMapConfig)
-+ void zoomToCenterScale()
-+ void zoomToPoint(Point point)
-+ void zoomToPoint(double x, double y, double scale)
-+ void zoomToGeometry(Geometry geometry)
-+ void setCenterPoint(double[] centerPoint)
+    + void init(GisMapConfig gisMapConfig)
+    + void zoomToCenterScale()
+    + void zoomToPoint(Point point)
+    + void zoomToPoint(double x, double y, double scale)
+    + void zoomToGeometry(Geometry geometry)
+    + void setCenterPoint(double[] centerPoint)
 }
 
 abstract class BaseTiledParam
