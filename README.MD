@@ -22,6 +22,9 @@ Gradle
     implementation 'com.github.zcolin:ZArcgis:latest.release'
 ```
 
+class structure
+-
+![](uml.png)
 
 USAGE
 -

@@ -1,0 +1,61 @@
+@startuml
+Title "ZArcgis类图"
+
+class GisCalloutMgr
+class GeoCoordinateConvertUtil
+class WktConvertUtil
+
+GisAbstractGraphicsOverlay<|-- GisGraphicsLayer
+GisAbstractOperationalLayer<|-- GisFeatureLayer
+GisFeatureLayer<|-- GisGeoDatabaseLayer
+GisFeatureLayer<|-- GisShapeFileLayer
+GisAbstractOperationalLayer<|-- GisMapImageLayer
+GisGraphicsLayer..>GisGraphicsOverlayConfig
+
+abstract class GisAbstractGraphicsOverlay{
++ GisAbstractGraphicsOverlay(GisMapView mapView)
+}
+
+abstract class GisAbstractOperationalLayer{
++ GisAbstractOperationalLayer(GisMapView mapView)
+}
+
+class GisGraphicsOverlayConfig{
++ static GisGraphicsOverlayConfig instanceBuffer()
++ static GisGraphicsOverlayConfig instanceHighlight()
++ static GisGraphicsOverlayConfig instanceDraw()
+}
+
+RelativeLayout<|--GisMapOperateView
+FrameLayout<|--GisMapView
+GisMapOperateView-->GisMapView
+GisMapOperateView..>GisMenuBar
+GisMenuBar-->GisMapTypeDialog
+GisMapOperateView-->GisMapConfig
+GisMapView-->GisMapConfig
+GisMapOperateView-->GisGraphicsLayer
+
+class GisMapView{
++ void init(GisMapConfig gisMapConfig)
++ void zoomToCenterScale()
++ void zoomToPoint(Point point)
++ void zoomToPoint(double x, double y, double scale)
++ void zoomToGeometry(Geometry geometry)
++ void setCenterPoint(double[] centerPoint)
+}
+
+abstract class BaseTiledParam
+BaseTiledParam<|--BaiduTiledParam
+BaseTiledParam<|--GaodeAndGoogleTiledParam
+BaseTiledParam<|--GaodeTiledParam
+BaseTiledParam<|--GoogleTiledParam
+BaseTiledParam<|--TiandituTiledParam
+BaseTiledParam-->GisMapConfig
+BaseTiledLayer-->BaseTiledParam
+GisMapView..>BaseTiledLayer
+
+MeasureDraw<|--GisMeasureDraw
+MeasureDraw..>MeasureDrawEntity
+GisMeasureDraw..>MeasureUtil
+GisMenuBar-->GisMeasureDraw
+@enduml
