@@ -3,9 +3,12 @@ package com.zcolin.arcgis.demo;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import com.zcolin.arcgis.core.GisMapConfig;
 import com.zcolin.arcgis.core.GisMapOperateView;
+import com.zcolin.arcgis.core.GisMapView;
 import com.zcolin.arcgis.core.callout.GisCalloutMgr;
 import com.zcolin.arcgis.core.layermgr.GisGraphicsOverlayConfig;
+import com.zcolin.arcgis.core.tiledservice.GoogleTiledParam;
 import com.zcolin.frame.app.BaseFrameActivity;
 
 /**
@@ -25,6 +28,11 @@ public class MainActivity extends BaseFrameActivity {
 
 
     private void initData() {
+
+        GisMapConfig config = new GisMapConfig();
+        config.setBaseMapType(GisMapView.TYPE_BASETILED_IMG);
+        config.setTileParam(new GoogleTiledParam(config));
+        
         gisMapOperateView.initMapViews();
         GisCalloutMgr.instance(gisMapOperateView.getCallout(), mActivity, "我是一个callout")
                      .backgroundColor(Color.GREEN)

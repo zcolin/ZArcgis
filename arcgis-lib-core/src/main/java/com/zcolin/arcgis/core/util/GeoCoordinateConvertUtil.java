@@ -8,6 +8,10 @@
 
 package com.zcolin.arcgis.core.util;
 
+import com.esri.arcgisruntime.geometry.GeometryEngine;
+import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.SpatialReference;
+
 /**
  * 各地图API坐标系统比较与转换;
  * WGS84坐标系：即地球坐标系，国际上通用的坐标系。设备一般包含GPS芯片或者北斗芯片获取的经纬度为WGS84地理坐标系,
@@ -118,5 +122,16 @@ public class GeoCoordinateConvertUtil {
         ret += (20.0 * Math.sin(x * pi) + 40.0 * Math.sin(x / 3.0 * pi)) * 2.0 / 3.0;
         ret += (150.0 * Math.sin(x / 12.0 * pi) + 300.0 * Math.sin(x / 30.0 * pi)) * 2.0 / 3.0;
         return ret;
+    }
+
+    /**
+     * 转换坐标系
+     *
+     * @param point 源坐标点
+     * @param dest  目标坐标系
+     * @return 点
+     */
+    public static Point transform(Point point, int dest) {
+        return (Point) GeometryEngine.project(point, SpatialReference.create(dest));
     }
 }

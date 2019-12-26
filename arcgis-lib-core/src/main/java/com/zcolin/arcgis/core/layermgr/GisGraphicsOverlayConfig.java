@@ -1,6 +1,15 @@
 /*
  * *********************************************************
  *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     19-12-26 下午8:54
+ * ********************************************************
+ */
+
+/*
+ * *********************************************************
+ *   author   colin
  *   email    wanglin2046@126.com
  *   date     19-1-23 下午1:50
  * ********************************************************
@@ -30,16 +39,21 @@ public class GisGraphicsOverlayConfig {
     /**
      * 纯色点的设置
      */
-    private int pointColor;//点颜色
+    private int                      pointColor;//点颜色
     private SimpleMarkerSymbol.Style pointType = SimpleMarkerSymbol.Style.CIRCLE;//点的形状， 默认是圆点
     private int                      pointSize = 25;
+
+    private float pointOffSetX;    //点x偏移
+    private float pointOffSetY;    //点y偏移
+
 
     /**
      * 线设置
      */
-    private int                    lineColor = Color.argb(90, 255, 0, 0);//线的颜色
-    private int                    lineWidth = 4;//线宽度
-    private SimpleLineSymbol.Style lineType  = SimpleLineSymbol.Style.SOLID;//线的类型，默认是实心线
+    private int                          lineColor       = Color.argb(90, 255, 0, 0);//线的颜色
+    private int                          lineWidth       = 4;//线宽度
+    private SimpleLineSymbol.Style       lineType        = SimpleLineSymbol.Style.SOLID;//线的类型，默认是实心线
+    private SimpleLineSymbol.MarkerStyle lineMarkerStyle = SimpleLineSymbol.MarkerStyle.NONE; //无箭头
 
     /**
      * 面设置
@@ -64,7 +78,7 @@ public class GisGraphicsOverlayConfig {
         overlayConfig.polygonFillColor = Color.argb(90, 0, 191, 225);//面的填充的颜色
         return overlayConfig;
     }
-    
+
     public static GisGraphicsOverlayConfig instanceDraw() {
         GisGraphicsOverlayConfig overlayConfig = new GisGraphicsOverlayConfig();
         overlayConfig.pointColor = Color.argb(90, 255, 0, 0);//点颜色
