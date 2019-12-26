@@ -30,7 +30,7 @@ USAGE
 -
 **layout**
 ```
-    <com.telchina.arcgis.core.GisMapOperateView
+    <com.zcolin.arcgis.core.GisMapOperateView
         android:id="@+id/gismap_view"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"

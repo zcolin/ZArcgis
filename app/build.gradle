@@ -67,7 +67,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':th-arcgis-lib-core')
+    implementation project(':arcgis-lib-core')
     implementation "com.android.support:recyclerview-v7:$supprotVersion"
     implementation "com.android.support:cardview-v7:$supprotVersion"
     implementation "com.android.support:design:$supprotVersion"

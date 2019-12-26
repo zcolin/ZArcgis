@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ZArcgis.iml" filepath="$PROJECT_DIR$/ZArcgis.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/th-arcgis-lib-core/th-arcgis-lib-core.iml" filepath="$PROJECT_DIR$/th-arcgis-lib-core/th-arcgis-lib-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/arcgis-lib-core/arcgis-lib-core.iml" filepath="$PROJECT_DIR$/arcgis-lib-core/arcgis-lib-core.iml" />
     </modules>
   </component>
 </project>

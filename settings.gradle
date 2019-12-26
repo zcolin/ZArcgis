@@ -1,1 +1,1 @@
-include ':app', ':th-arcgis-lib-core'
+include ':app', ':arcgis-lib-core'

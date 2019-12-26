@@ -3,9 +3,9 @@ package com.zcolin.arcgis.demo;
 import android.graphics.Color;
 import android.os.Bundle;
 
-import com.telchina.arcgis.core.GisMapOperateView;
-import com.telchina.arcgis.core.callout.GisCalloutMgr;
-import com.telchina.arcgis.core.layermgr.GisGraphicsOverlayConfig;
+import com.zcolin.arcgis.core.GisMapOperateView;
+import com.zcolin.arcgis.core.callout.GisCalloutMgr;
+import com.zcolin.arcgis.core.layermgr.GisGraphicsOverlayConfig;
 import com.zcolin.frame.app.BaseFrameActivity;
 
 /**
