@@ -57,8 +57,12 @@ public class GisMenuBar extends LinearLayout {
     }
 
     public GisMenuBar init(GisMapOperateView gisMapOperateView, int orientation) {
-        LayoutInflater.from(getContext()).inflate(orientation == HORIZONTAL ? R.layout.zarcgis_menubar_hor : R.layout.zarcgis_menubar_ver, this);
-        setOrientation(orientation);
+        int res = orientation == HORIZONTAL ? R.layout.zarcgis_menubar_hor : R.layout.zarcgis_menubar_ver;
+        return initWithLayoutRes(gisMapOperateView, res);
+    }
+
+    public GisMenuBar initWithLayoutRes(GisMapOperateView gisMapOperateView, int res) {
+        LayoutInflater.from(getContext()).inflate(res, this);
         ivReset = findViewById(R.id.iv_reset);
         ivClear = findViewById(R.id.iv_clear);
         ivLocation = findViewById(R.id.iv_lcoation);
@@ -155,6 +159,7 @@ public class GisMenuBar extends LinearLayout {
         }, 0);
         return this;
     }
+
 
     private void setWindowDeploy(GisMapTypeDialog gisMapTypeDialog) {
         int[] ivMapTypeLocation = new int[2];
